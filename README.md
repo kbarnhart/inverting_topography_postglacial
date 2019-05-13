@@ -9,9 +9,6 @@ calculation package. It does not fully document the package, but instead it
 points to the files located in the folder `calculation_package_documentation`
 that do.
 
-The report associated with this calculation package is within the documentation
-folder in the file 'EWG_Study3_Modeling_Long_Term_Erosion_20180226.pdf'.
-
 Within the folder `calculation_package_documentation` there are five files that
 document the contents and construction of this calculation package. The file
 names should provide sufficient information about the contents of each file.
