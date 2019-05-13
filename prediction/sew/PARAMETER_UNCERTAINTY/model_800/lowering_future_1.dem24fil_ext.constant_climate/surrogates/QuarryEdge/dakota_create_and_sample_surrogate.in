@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_800.lowering_future_1.dem24fil_ext.constant_climate.QuarryEdge.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_800/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_800/lowering_future_1.dem24fil_ext.constant_climate/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_800/lowering_future_1.dem24fil_ext.constant_climate/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 3
+    descriptors = 'K_rock_sp_exp' 'linear_diffusivity_exp' 'K_till_sp_exp'
+    lower_bounds = -8.0 -2.0 -4.0
+    upper_bounds = -4.0 -1.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'QuarryEdge.0' 'QuarryEdge.1' 'QuarryEdge.2' 'QuarryEdge.3' 'QuarryEdge.4' 'QuarryEdge.5' 'QuarryEdge.6' 'QuarryEdge.7' 'QuarryEdge.8' 'QuarryEdge.9' 'QuarryEdge.10' 'QuarryEdge.11' 'QuarryEdge.12' 'QuarryEdge.13' 'QuarryEdge.14' 'QuarryEdge.15' 'QuarryEdge.16' 'QuarryEdge.17' 'QuarryEdge.18' 'QuarryEdge.19' 'QuarryEdge.20' 'QuarryEdge.21' 'QuarryEdge.22' 'QuarryEdge.23' 'QuarryEdge.24' 'QuarryEdge.25' 'QuarryEdge.26' 'QuarryEdge.27' 'QuarryEdge.28' 'QuarryEdge.29' 'QuarryEdge.30' 'QuarryEdge.31' 'QuarryEdge.32' 'QuarryEdge.33' 'QuarryEdge.34' 'QuarryEdge.35' 'QuarryEdge.36' 'QuarryEdge.37' 'QuarryEdge.38' 'QuarryEdge.39' 'QuarryEdge.40' 'QuarryEdge.41' 'QuarryEdge.42' 'QuarryEdge.43' 'QuarryEdge.44' 'QuarryEdge.45' 'QuarryEdge.46' 'QuarryEdge.47' 'QuarryEdge.48' 'QuarryEdge.49' 'QuarryEdge.50' 'QuarryEdge.51' 'QuarryEdge.52' 'QuarryEdge.53' 'QuarryEdge.54' 'QuarryEdge.55' 'QuarryEdge.56' 'QuarryEdge.57' 'QuarryEdge.58' 'QuarryEdge.59' 'QuarryEdge.60' 'QuarryEdge.61' 'QuarryEdge.62' 'QuarryEdge.63' 'QuarryEdge.64' 'QuarryEdge.65' 'QuarryEdge.66' 'QuarryEdge.67' 'QuarryEdge.68' 'QuarryEdge.69' 'QuarryEdge.70' 'QuarryEdge.71' 'QuarryEdge.72' 'QuarryEdge.73' 'QuarryEdge.74' 'QuarryEdge.75' 'QuarryEdge.76' 'QuarryEdge.77' 'QuarryEdge.78' 'QuarryEdge.79' 'QuarryEdge.80' 'QuarryEdge.81' 'QuarryEdge.82' 'QuarryEdge.83' 'QuarryEdge.84' 'QuarryEdge.85' 'QuarryEdge.86' 'QuarryEdge.87' 'QuarryEdge.88' 'QuarryEdge.89' 'QuarryEdge.90' 'QuarryEdge.91' 'QuarryEdge.92' 'QuarryEdge.93' 'QuarryEdge.94' 'QuarryEdge.95' 'QuarryEdge.96' 'QuarryEdge.97' 'QuarryEdge.98' 'QuarryEdge.99' 'QuarryEdge.100'
+    no_gradients
+    no_hessians

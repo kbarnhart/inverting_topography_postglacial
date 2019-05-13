@@ -1,0 +1,82 @@
+# Dakota input file
+environment
+  top_method_pointer = 'HS'
+  tabular_data
+  tabular_data_file = 'wv_model_800_calib.dat'
+
+method
+  id_method = 'HS'
+  hybrid sequential
+  method_pointer_list = 'EGO' 'GN'
+
+method
+id_method = 'EGO'
+  efficient_global
+    gaussian_process surfpack
+    use_derivatives
+    initial_samples = 30
+    seed = 8158
+    output quiet
+  model_pointer = 'M1'
+
+method
+id_method = 'GN'
+    optpp_g_newton
+      search_method = gradient_based_line_search
+      model_pointer = 'M2'
+      output verbose
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R_forward'
+
+model
+  id_model = 'M2'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R_centered'
+
+variables
+  id_variables = 'V1'
+  continuous_design = 3
+    descriptors = 'K_rock_sp_exp' 'linear_diffusivity_exp' 'K_till_sp_exp'
+    lower_bounds = -8.0 -6.3 -6.0
+    upper_bounds = -3.0 -1.3 -1.0
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/sew/EGO/model_800/lowering_history_0.pg24f_ic5etch/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/sew/EGO/model_800/lowering_history_0.pg24f_ic5etch'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/sew/EGO/model_800/lowering_history_0.pg24f_ic5etch/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R_forward'
+  calibration_terms = 20
+    response_descriptors = 'chi_elev_1' 'chi_elev_2' 'chi_elev_3' 'chi_elev_4' 'chi_elev_5' 'chi_elev_6' 'chi_elev_7' 'chi_elev_8' 'chi_elev_9' 'chi_elev_10' 'chi_elev_11' 'chi_elev_12' 'chi_elev_13' 'chi_elev_14' 'chi_elev_15' 'chi_elev_16' 'chi_elev_17' 'chi_elev_18' 'chi_elev_19' 'chi_elev_20'
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    numerical_gradients
+      method_source dakota
+      interval_type forward
+    no_hessians
+
+responses
+  id_responses = 'R_centered'
+  calibration_terms = 20
+    response_descriptors = 'chi_elev_1' 'chi_elev_2' 'chi_elev_3' 'chi_elev_4' 'chi_elev_5' 'chi_elev_6' 'chi_elev_7' 'chi_elev_8' 'chi_elev_9' 'chi_elev_10' 'chi_elev_11' 'chi_elev_12' 'chi_elev_13' 'chi_elev_14' 'chi_elev_15' 'chi_elev_16' 'chi_elev_17' 'chi_elev_18' 'chi_elev_19' 'chi_elev_20'
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    numerical_gradients
+      method_source dakota
+      interval_type central
+    no_hessians

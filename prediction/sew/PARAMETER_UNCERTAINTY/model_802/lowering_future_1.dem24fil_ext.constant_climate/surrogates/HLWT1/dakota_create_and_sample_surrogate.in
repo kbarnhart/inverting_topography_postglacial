@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_802.lowering_future_1.dem24fil_ext.constant_climate.HLWT1.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_1.dem24fil_ext.constant_climate/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_1.dem24fil_ext.constant_climate/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 5
+    descriptors = 'linear_diffusivity_exp' 'rock_erosion__threshold_exp' 'till_erosion__threshold_exp' 'K_rock_sp_exp' 'K_till_sp_exp'
+    lower_bounds = -2.0 -3.0 -4.0 -6.0 -4.0
+    upper_bounds = -1.0 1.0 -1.0 -3.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'HLWT1.0' 'HLWT1.1' 'HLWT1.2' 'HLWT1.3' 'HLWT1.4' 'HLWT1.5' 'HLWT1.6' 'HLWT1.7' 'HLWT1.8' 'HLWT1.9' 'HLWT1.10' 'HLWT1.11' 'HLWT1.12' 'HLWT1.13' 'HLWT1.14' 'HLWT1.15' 'HLWT1.16' 'HLWT1.17' 'HLWT1.18' 'HLWT1.19' 'HLWT1.20' 'HLWT1.21' 'HLWT1.22' 'HLWT1.23' 'HLWT1.24' 'HLWT1.25' 'HLWT1.26' 'HLWT1.27' 'HLWT1.28' 'HLWT1.29' 'HLWT1.30' 'HLWT1.31' 'HLWT1.32' 'HLWT1.33' 'HLWT1.34' 'HLWT1.35' 'HLWT1.36' 'HLWT1.37' 'HLWT1.38' 'HLWT1.39' 'HLWT1.40' 'HLWT1.41' 'HLWT1.42' 'HLWT1.43' 'HLWT1.44' 'HLWT1.45' 'HLWT1.46' 'HLWT1.47' 'HLWT1.48' 'HLWT1.49' 'HLWT1.50' 'HLWT1.51' 'HLWT1.52' 'HLWT1.53' 'HLWT1.54' 'HLWT1.55' 'HLWT1.56' 'HLWT1.57' 'HLWT1.58' 'HLWT1.59' 'HLWT1.60' 'HLWT1.61' 'HLWT1.62' 'HLWT1.63' 'HLWT1.64' 'HLWT1.65' 'HLWT1.66' 'HLWT1.67' 'HLWT1.68' 'HLWT1.69' 'HLWT1.70' 'HLWT1.71' 'HLWT1.72' 'HLWT1.73' 'HLWT1.74' 'HLWT1.75' 'HLWT1.76' 'HLWT1.77' 'HLWT1.78' 'HLWT1.79' 'HLWT1.80' 'HLWT1.81' 'HLWT1.82' 'HLWT1.83' 'HLWT1.84' 'HLWT1.85' 'HLWT1.86' 'HLWT1.87' 'HLWT1.88' 'HLWT1.89' 'HLWT1.90' 'HLWT1.91' 'HLWT1.92' 'HLWT1.93' 'HLWT1.94' 'HLWT1.95' 'HLWT1.96' 'HLWT1.97' 'HLWT1.98' 'HLWT1.99' 'HLWT1.100'
+    no_gradients
+    no_hessians

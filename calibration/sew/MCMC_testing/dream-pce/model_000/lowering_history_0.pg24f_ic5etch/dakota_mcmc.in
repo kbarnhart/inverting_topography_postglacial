@@ -1,0 +1,48 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'wv_mcmc_test.dat'
+
+method
+  bayes_calibration dream
+    chain_samples 100000
+    chains 5
+    seed 2460
+    burn_in_samples = 100
+    max_iterations = 100
+    emulator
+      pce
+        expansion_order 3
+        expansion_samples 40
+        posterior_adaptive
+    export_chain_points_file  'posterior.dat'
+
+variables
+  normal_uncertain = 2
+    descriptors = 'linear_diffusivity_exp' 'K_sp_exp'
+    lower_bounds = -4.0 -6.0
+    upper_bounds = -1.3 -1.0
+    means = -1.97 -3.99
+    std_deviations = 1.87 0.21
+
+interface
+  fork
+  analysis_driver = 'python ../../driver.py ../..'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named 'MCMC/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  calibration_terms = 20
+    response_descriptors = 'chi_elev_1' 'chi_elev_2' 'chi_elev_3' 'chi_elev_4' 'chi_elev_5' 'chi_elev_6' 'chi_elev_7' 'chi_elev_8' 'chi_elev_9' 'chi_elev_10' 'chi_elev_11' 'chi_elev_12' 'chi_elev_13' 'chi_elev_14' 'chi_elev_15' 'chi_elev_16' 'chi_elev_17' 'chi_elev_18' 'chi_elev_19' 'chi_elev_20'
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    calibration_data_file = 'data.dat'
+      freeform
+    no_hessians
+    no_gradients

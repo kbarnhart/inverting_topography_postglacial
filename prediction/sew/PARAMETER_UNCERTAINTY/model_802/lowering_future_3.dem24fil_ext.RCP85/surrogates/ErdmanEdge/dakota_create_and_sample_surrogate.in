@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_802.lowering_future_3.dem24fil_ext.RCP85.ErdmanEdge.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_3.dem24fil_ext.RCP85/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_3.dem24fil_ext.RCP85/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 5
+    descriptors = 'linear_diffusivity_exp' 'rock_erosion__threshold_exp' 'till_erosion__threshold_exp' 'K_rock_sp_exp' 'K_till_sp_exp'
+    lower_bounds = -2.0 -3.0 -4.0 -6.0 -4.0
+    upper_bounds = -1.0 1.0 -1.0 -3.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'ErdmanEdge.0' 'ErdmanEdge.1' 'ErdmanEdge.2' 'ErdmanEdge.3' 'ErdmanEdge.4' 'ErdmanEdge.5' 'ErdmanEdge.6' 'ErdmanEdge.7' 'ErdmanEdge.8' 'ErdmanEdge.9' 'ErdmanEdge.10' 'ErdmanEdge.11' 'ErdmanEdge.12' 'ErdmanEdge.13' 'ErdmanEdge.14' 'ErdmanEdge.15' 'ErdmanEdge.16' 'ErdmanEdge.17' 'ErdmanEdge.18' 'ErdmanEdge.19' 'ErdmanEdge.20' 'ErdmanEdge.21' 'ErdmanEdge.22' 'ErdmanEdge.23' 'ErdmanEdge.24' 'ErdmanEdge.25' 'ErdmanEdge.26' 'ErdmanEdge.27' 'ErdmanEdge.28' 'ErdmanEdge.29' 'ErdmanEdge.30' 'ErdmanEdge.31' 'ErdmanEdge.32' 'ErdmanEdge.33' 'ErdmanEdge.34' 'ErdmanEdge.35' 'ErdmanEdge.36' 'ErdmanEdge.37' 'ErdmanEdge.38' 'ErdmanEdge.39' 'ErdmanEdge.40' 'ErdmanEdge.41' 'ErdmanEdge.42' 'ErdmanEdge.43' 'ErdmanEdge.44' 'ErdmanEdge.45' 'ErdmanEdge.46' 'ErdmanEdge.47' 'ErdmanEdge.48' 'ErdmanEdge.49' 'ErdmanEdge.50' 'ErdmanEdge.51' 'ErdmanEdge.52' 'ErdmanEdge.53' 'ErdmanEdge.54' 'ErdmanEdge.55' 'ErdmanEdge.56' 'ErdmanEdge.57' 'ErdmanEdge.58' 'ErdmanEdge.59' 'ErdmanEdge.60' 'ErdmanEdge.61' 'ErdmanEdge.62' 'ErdmanEdge.63' 'ErdmanEdge.64' 'ErdmanEdge.65' 'ErdmanEdge.66' 'ErdmanEdge.67' 'ErdmanEdge.68' 'ErdmanEdge.69' 'ErdmanEdge.70' 'ErdmanEdge.71' 'ErdmanEdge.72' 'ErdmanEdge.73' 'ErdmanEdge.74' 'ErdmanEdge.75' 'ErdmanEdge.76' 'ErdmanEdge.77' 'ErdmanEdge.78' 'ErdmanEdge.79' 'ErdmanEdge.80' 'ErdmanEdge.81' 'ErdmanEdge.82' 'ErdmanEdge.83' 'ErdmanEdge.84' 'ErdmanEdge.85' 'ErdmanEdge.86' 'ErdmanEdge.87' 'ErdmanEdge.88' 'ErdmanEdge.89' 'ErdmanEdge.90' 'ErdmanEdge.91' 'ErdmanEdge.92' 'ErdmanEdge.93' 'ErdmanEdge.94' 'ErdmanEdge.95' 'ErdmanEdge.96' 'ErdmanEdge.97' 'ErdmanEdge.98' 'ErdmanEdge.99' 'ErdmanEdge.100'
+    no_gradients
+    no_hessians

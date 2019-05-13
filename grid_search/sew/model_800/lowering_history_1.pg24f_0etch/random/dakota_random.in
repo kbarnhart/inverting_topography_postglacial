@@ -1,0 +1,37 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'sew_model_800_random.dat'
+
+method
+vector_parameter_study
+  num_steps = 1000
+  step_vector = 1
+
+model
+    single
+
+variables
+  discrete_design_range = 1
+    descriptors = 'random_seed'
+    initial_point = 903
+    interface
+      fork#,
+    	  asynchronous
+    	  # this must agree with the qsub and driver script files
+    	  evaluation_concurrency = 47
+
+      analysis_driver = 'python ../../driver.py /work/WVDP_EWG_STUDY3/study3py/grid_search/sew/model_800/lowering_history_1.pg24f_0etch/random'
+      parameters_file = 'params.in'
+      results_file = 'results.out'
+      work_directory
+        named 'GRID/run'
+        directory_tag
+        directory_save
+      file_save
+
+responses
+  response_functions = 32
+  response_descriptors = 'chi_density_sum_squares' 'chi_gradient' 'chi_intercept' 'cumarea95' 'cumarea96' 'cumarea97' 'cumarea98' 'cumarea99' 'elev02' 'elev08' 'elev100' 'elev23' 'elev30' 'elev36' 'elev50' 'elev75' 'elev85' 'elev90' 'elev96' 'four_cell_nodes' 'hypsometric_integral' 'mean_elevation' 'mean_elevation_chi_area' 'mean_gradient' 'mean_gradient_chi_area' 'one_cell_nodes' 'three_cell_nodes' 'two_cell_nodes' 'var_elevation' 'var_elevation_chi_area' 'var_gradient' 'var_gradient_chi_area'
+  no_gradients
+  no_hessians

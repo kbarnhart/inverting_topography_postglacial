@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_802.lowering_future_3.dem24fil_ext.RCP85.Lagoon2.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_3.dem24fil_ext.RCP85/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_3.dem24fil_ext.RCP85/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 5
+    descriptors = 'linear_diffusivity_exp' 'rock_erosion__threshold_exp' 'till_erosion__threshold_exp' 'K_rock_sp_exp' 'K_till_sp_exp'
+    lower_bounds = -2.0 -3.0 -4.0 -6.0 -4.0
+    upper_bounds = -1.0 1.0 -1.0 -3.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'Lagoon2.0' 'Lagoon2.1' 'Lagoon2.2' 'Lagoon2.3' 'Lagoon2.4' 'Lagoon2.5' 'Lagoon2.6' 'Lagoon2.7' 'Lagoon2.8' 'Lagoon2.9' 'Lagoon2.10' 'Lagoon2.11' 'Lagoon2.12' 'Lagoon2.13' 'Lagoon2.14' 'Lagoon2.15' 'Lagoon2.16' 'Lagoon2.17' 'Lagoon2.18' 'Lagoon2.19' 'Lagoon2.20' 'Lagoon2.21' 'Lagoon2.22' 'Lagoon2.23' 'Lagoon2.24' 'Lagoon2.25' 'Lagoon2.26' 'Lagoon2.27' 'Lagoon2.28' 'Lagoon2.29' 'Lagoon2.30' 'Lagoon2.31' 'Lagoon2.32' 'Lagoon2.33' 'Lagoon2.34' 'Lagoon2.35' 'Lagoon2.36' 'Lagoon2.37' 'Lagoon2.38' 'Lagoon2.39' 'Lagoon2.40' 'Lagoon2.41' 'Lagoon2.42' 'Lagoon2.43' 'Lagoon2.44' 'Lagoon2.45' 'Lagoon2.46' 'Lagoon2.47' 'Lagoon2.48' 'Lagoon2.49' 'Lagoon2.50' 'Lagoon2.51' 'Lagoon2.52' 'Lagoon2.53' 'Lagoon2.54' 'Lagoon2.55' 'Lagoon2.56' 'Lagoon2.57' 'Lagoon2.58' 'Lagoon2.59' 'Lagoon2.60' 'Lagoon2.61' 'Lagoon2.62' 'Lagoon2.63' 'Lagoon2.64' 'Lagoon2.65' 'Lagoon2.66' 'Lagoon2.67' 'Lagoon2.68' 'Lagoon2.69' 'Lagoon2.70' 'Lagoon2.71' 'Lagoon2.72' 'Lagoon2.73' 'Lagoon2.74' 'Lagoon2.75' 'Lagoon2.76' 'Lagoon2.77' 'Lagoon2.78' 'Lagoon2.79' 'Lagoon2.80' 'Lagoon2.81' 'Lagoon2.82' 'Lagoon2.83' 'Lagoon2.84' 'Lagoon2.85' 'Lagoon2.86' 'Lagoon2.87' 'Lagoon2.88' 'Lagoon2.89' 'Lagoon2.90' 'Lagoon2.91' 'Lagoon2.92' 'Lagoon2.93' 'Lagoon2.94' 'Lagoon2.95' 'Lagoon2.96' 'Lagoon2.97' 'Lagoon2.98' 'Lagoon2.99' 'Lagoon2.100'
+    no_gradients
+    no_hessians

@@ -1,0 +1,49 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'wv_{model_name}_mcmc_02.dat'
+
+method
+  bayes_calibration queso
+    dram
+    chain_samples 100000
+    seed {GA_seed}
+    burn_in_samples = 100
+    max_iterations = 2
+    emulator
+      gaussian_process
+      surfpack
+      build_samples = {initial_samples}
+      posterior_adaptive
+     export_chain_points_file  'posterior_02.dat'
+
+variables
+  normal_uncertain = {num_variables}
+    descriptors = {variable_names}
+    lower_bounds = {lower_bounds}
+    upper_bounds = {upper_bounds}
+    means = {means}
+    std_deviations = {stds}
+
+interface
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/{loc}/QUESO_DRAM/{model_name}/{lowering_history}.{initial_condition}/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/{loc}/QUESO_DRAM/{model_name}/{lowering_history}.{initial_condition}'
+  asynchronous
+  failure_capture recover {recovery_values}
+  evaluation_concurrency = {evaluation_concurrency}
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/{loc}/QUESO_DRAM/{model_name}/{lowering_history}.{initial_condition}/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    calibration_data_file = {data_file_name}
+      freeform
+    no_hessians
+    no_gradients

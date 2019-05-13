@@ -1,0 +1,50 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'wv_model_012_beale.dat'
+
+list_parameter_study
+  list_of_points =
+-5.71768424526	-205.45195016	-153.867375877	-5.81247069326	
+-2.10978975274	193.45195016	150.454884081	2.84229569166	
+-4.34082251131	-848.456102767	90.2443981172	-1.18538513104	
+-3.48665148669	836.456102767	-93.6568899134	-1.78478987056	
+-5.179977665	351.347505798	-218.482297073	-4.72091800202	
+-2.647496333	-363.347505798	215.069805277	1.75074300042	
+-5.32459936768	39.6323589898	-128.48092738	-7.01813676685	
+-2.50287463032	-51.6323589898	125.068435584	4.04796176525	
+
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R1'
+
+variables
+  id_variables = 'V1'
+  continuous_design = 4
+    descriptors = K_sp_exp erosion__threshold_exp v_sc_exp linear_diffusivity_exp
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/sew/EGO/model_012/lowering_history_0.pg24f_ic5etch/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/gully/EGO/model_012/lowering_history_0.pg24f_ic5etch'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/sew/EGO/model_012/lowering_history_0.pg24f_ic5etch/beale/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 20
+    response_descriptors = chi_elev_1 chi_elev_2 chi_elev_3 chi_elev_4 chi_elev_5 chi_elev_6 chi_elev_7 chi_elev_8 chi_elev_9 chi_elev_10 chi_elev_11 chi_elev_12 chi_elev_13 chi_elev_14 chi_elev_15 chi_elev_16 chi_elev_17 chi_elev_18 chi_elev_19 chi_elev_20
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    no_gradients
+    no_hessians

@@ -1,0 +1,8 @@
+opt_var_precip: True
+precip_stop_time: 100.0
+mean_storm__intensity: 2.3047275
+infiltration_capacity: 5.5
+precip_shape_factor: 0.82
+intermittency_factor: 0.481
+intermittency_factor_rate_of_change: 0.0
+mean_depth_rate_of_change: 0.00109575

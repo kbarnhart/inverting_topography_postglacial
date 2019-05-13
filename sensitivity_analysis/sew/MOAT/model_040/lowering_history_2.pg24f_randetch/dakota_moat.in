@@ -1,0 +1,31 @@
+# Dakota input file
+method
+  psuade_moat
+    partitions = 40 
+    samples = 40 
+    seed = 4602 
+
+variables
+  continuous_design = 3
+    descriptors = 'linear_diffusivity_exp' 'slope_crit' 'K_sp_exp'
+    lower_bounds = -6.3 0.25 -6.0
+    upper_bounds = -1.3 1.25 -1.0
+
+interface
+  id_interface = 'CSDMS'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/drivers/dakota/parallel_model_run_driver.py /work/WVDP_EWG_STUDY3/study3py/sensitivity_analysis/sew/MOAT/model_040/lowering_history_2.pg24f_randetch'
+  analysis_components = '/work/WVDP_EWG_STUDY3/study3py/sensitivity_analysis/sew/MOAT/model_040/lowering_history_2.pg24f_randetch/dakota.yaml'
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/sensitivity_analysis/sew/MOAT/model_040/lowering_history_2.pg24f_randetch/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  response_functions = 32
+    response_descriptors = 'chi_density_sum_squares' 'chi_gradient' 'chi_intercept' 'cumarea95' 'cumarea96' 'cumarea97' 'cumarea98' 'cumarea99' 'elev02' 'elev08' 'elev100' 'elev23' 'elev30' 'elev36' 'elev50' 'elev75' 'elev85' 'elev90' 'elev96' 'four_cell_nodes' 'hypsometric_integral' 'mean_elevation' 'mean_elevation_chi_area' 'mean_gradient' 'mean_gradient_chi_area' 'one_cell_nodes' 'three_cell_nodes' 'two_cell_nodes' 'var_elevation' 'var_elevation_chi_area' 'var_gradient' 'var_gradient_chi_area'
+  no_gradients
+  no_hessians

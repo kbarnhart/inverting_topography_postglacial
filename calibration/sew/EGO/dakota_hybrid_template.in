@@ -1,0 +1,82 @@
+# Dakota input file
+environment
+  top_method_pointer = 'HS'
+  tabular_data
+  tabular_data_file = 'wv_{model_name}_calib.dat'
+
+method
+  id_method = 'HS'
+  hybrid sequential
+  method_pointer_list = 'EGO' 'GN'
+
+method
+id_method = 'EGO'
+  efficient_global
+    gaussian_process surfpack
+    use_derivatives
+    initial_samples = {initial_samples}
+    seed = {GA_seed}
+    output quiet
+  model_pointer = 'M1'
+
+method
+id_method = 'GN'
+    optpp_g_newton
+      search_method = gradient_based_line_search
+      model_pointer = 'M2'
+      output verbose
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R_forward'
+
+model
+  id_model = 'M2'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R_centered'
+
+variables
+  id_variables = 'V1'
+  continuous_design = {num_variables}
+    descriptors = {variable_names}
+    lower_bounds = {lower_bounds}
+    upper_bounds = {upper_bounds}
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/{loc}/EGO/{model_name}/{lowering_history}.{initial_condition}/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/{loc}/EGO/{model_name}/{lowering_history}.{initial_condition}'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/{loc}/EGO/{model_name}/{lowering_history}.{initial_condition}/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R_forward'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    numerical_gradients
+      method_source dakota
+      interval_type forward
+    no_hessians
+
+responses
+  id_responses = 'R_centered'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    numerical_gradients
+      method_source dakota
+      interval_type central
+    no_hessians

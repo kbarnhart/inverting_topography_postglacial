@@ -1,0 +1,49 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'wv_model_800_mcmc.dat'
+
+method
+  bayes_calibration queso
+    dram
+    chain_samples 100000
+    seed 8158
+    burn_in_samples = 100
+    max_iterations = 10
+    emulator
+      gaussian_process
+      surfpack
+      build_samples = 60
+      posterior_adaptive
+     export_chain_points_file  'posterior.dat'
+
+variables
+  normal_uncertain = 3
+    descriptors = 'K_rock_sp_exp' 'linear_diffusivity_exp' 'K_till_sp_exp'
+    lower_bounds = -8.0 -4.0 -6.0
+    upper_bounds = -3.0 -1.3 -1.0
+    means = -7.174 -1.376 -3.624
+    std_deviations = 504.6 0.5853 0.131
+
+interface
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/sew/QUESO_DRAM/model_800/lowering_history_0.pg24f_ic5etch/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/sew/QUESO_DRAM/model_800/lowering_history_0.pg24f_ic5etch'
+  asynchronous
+  failure_capture recover 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0 1000000.0
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/sew/QUESO_DRAM/model_800/lowering_history_0.pg24f_ic5etch/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  calibration_terms = 20
+    response_descriptors = 'chi_elev_1' 'chi_elev_2' 'chi_elev_3' 'chi_elev_4' 'chi_elev_5' 'chi_elev_6' 'chi_elev_7' 'chi_elev_8' 'chi_elev_9' 'chi_elev_10' 'chi_elev_11' 'chi_elev_12' 'chi_elev_13' 'chi_elev_14' 'chi_elev_15' 'chi_elev_16' 'chi_elev_17' 'chi_elev_18' 'chi_elev_19' 'chi_elev_20'
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    calibration_data_file = 'data.dat'
+      freeform
+    no_hessians
+    no_gradients

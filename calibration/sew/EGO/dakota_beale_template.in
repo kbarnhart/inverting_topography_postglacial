@@ -1,0 +1,42 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'wv_{model_name}_beale.dat'
+
+list_parameter_study
+  list_of_points =
+{list_of_points}
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R1'
+
+variables
+  id_variables = 'V1'
+  continuous_design = {num_variables}
+    descriptors = {variable_names}
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/{loc}/EGO/{model_name}/{lowering_history}.{initial_condition}/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/gully/EGO/{model_name}/{lowering_history}.{initial_condition}'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/{loc}/EGO/{model_name}/{lowering_history}.{initial_condition}/beale/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R1'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    no_gradients
+    no_hessians

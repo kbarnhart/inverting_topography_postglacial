@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_800.lowering_future_3.dem24fil_ext.RCP85.NDA3.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_800/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_800/lowering_future_3.dem24fil_ext.RCP85/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_800/lowering_future_3.dem24fil_ext.RCP85/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 3
+    descriptors = 'K_rock_sp_exp' 'linear_diffusivity_exp' 'K_till_sp_exp'
+    lower_bounds = -8.0 -2.0 -4.0
+    upper_bounds = -4.0 -1.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'NDA3.0' 'NDA3.1' 'NDA3.2' 'NDA3.3' 'NDA3.4' 'NDA3.5' 'NDA3.6' 'NDA3.7' 'NDA3.8' 'NDA3.9' 'NDA3.10' 'NDA3.11' 'NDA3.12' 'NDA3.13' 'NDA3.14' 'NDA3.15' 'NDA3.16' 'NDA3.17' 'NDA3.18' 'NDA3.19' 'NDA3.20' 'NDA3.21' 'NDA3.22' 'NDA3.23' 'NDA3.24' 'NDA3.25' 'NDA3.26' 'NDA3.27' 'NDA3.28' 'NDA3.29' 'NDA3.30' 'NDA3.31' 'NDA3.32' 'NDA3.33' 'NDA3.34' 'NDA3.35' 'NDA3.36' 'NDA3.37' 'NDA3.38' 'NDA3.39' 'NDA3.40' 'NDA3.41' 'NDA3.42' 'NDA3.43' 'NDA3.44' 'NDA3.45' 'NDA3.46' 'NDA3.47' 'NDA3.48' 'NDA3.49' 'NDA3.50' 'NDA3.51' 'NDA3.52' 'NDA3.53' 'NDA3.54' 'NDA3.55' 'NDA3.56' 'NDA3.57' 'NDA3.58' 'NDA3.59' 'NDA3.60' 'NDA3.61' 'NDA3.62' 'NDA3.63' 'NDA3.64' 'NDA3.65' 'NDA3.66' 'NDA3.67' 'NDA3.68' 'NDA3.69' 'NDA3.70' 'NDA3.71' 'NDA3.72' 'NDA3.73' 'NDA3.74' 'NDA3.75' 'NDA3.76' 'NDA3.77' 'NDA3.78' 'NDA3.79' 'NDA3.80' 'NDA3.81' 'NDA3.82' 'NDA3.83' 'NDA3.84' 'NDA3.85' 'NDA3.86' 'NDA3.87' 'NDA3.88' 'NDA3.89' 'NDA3.90' 'NDA3.91' 'NDA3.92' 'NDA3.93' 'NDA3.94' 'NDA3.95' 'NDA3.96' 'NDA3.97' 'NDA3.98' 'NDA3.99' 'NDA3.100'
+    no_gradients
+    no_hessians

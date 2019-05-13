@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_842.lowering_future_3.dem24fil_ext.RCP85.GullyHead1.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_842/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_842/lowering_future_3.dem24fil_ext.RCP85/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_842/lowering_future_3.dem24fil_ext.RCP85/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 6
+    descriptors = 'K_rock_sp_exp' 'K_till_sp_exp' 'rock_erosion__threshold_exp' 'till_erosion__threshold_exp' 'linear_diffusivity_exp' 'slope_crit'
+    lower_bounds = -4.0 -4.0 -1.0 -3.0 -3.0 0.0
+    upper_bounds = -3.0 -2.0 1.0 -0.0 -1.0 1.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'GullyHead1.0' 'GullyHead1.1' 'GullyHead1.2' 'GullyHead1.3' 'GullyHead1.4' 'GullyHead1.5' 'GullyHead1.6' 'GullyHead1.7' 'GullyHead1.8' 'GullyHead1.9' 'GullyHead1.10' 'GullyHead1.11' 'GullyHead1.12' 'GullyHead1.13' 'GullyHead1.14' 'GullyHead1.15' 'GullyHead1.16' 'GullyHead1.17' 'GullyHead1.18' 'GullyHead1.19' 'GullyHead1.20' 'GullyHead1.21' 'GullyHead1.22' 'GullyHead1.23' 'GullyHead1.24' 'GullyHead1.25' 'GullyHead1.26' 'GullyHead1.27' 'GullyHead1.28' 'GullyHead1.29' 'GullyHead1.30' 'GullyHead1.31' 'GullyHead1.32' 'GullyHead1.33' 'GullyHead1.34' 'GullyHead1.35' 'GullyHead1.36' 'GullyHead1.37' 'GullyHead1.38' 'GullyHead1.39' 'GullyHead1.40' 'GullyHead1.41' 'GullyHead1.42' 'GullyHead1.43' 'GullyHead1.44' 'GullyHead1.45' 'GullyHead1.46' 'GullyHead1.47' 'GullyHead1.48' 'GullyHead1.49' 'GullyHead1.50' 'GullyHead1.51' 'GullyHead1.52' 'GullyHead1.53' 'GullyHead1.54' 'GullyHead1.55' 'GullyHead1.56' 'GullyHead1.57' 'GullyHead1.58' 'GullyHead1.59' 'GullyHead1.60' 'GullyHead1.61' 'GullyHead1.62' 'GullyHead1.63' 'GullyHead1.64' 'GullyHead1.65' 'GullyHead1.66' 'GullyHead1.67' 'GullyHead1.68' 'GullyHead1.69' 'GullyHead1.70' 'GullyHead1.71' 'GullyHead1.72' 'GullyHead1.73' 'GullyHead1.74' 'GullyHead1.75' 'GullyHead1.76' 'GullyHead1.77' 'GullyHead1.78' 'GullyHead1.79' 'GullyHead1.80' 'GullyHead1.81' 'GullyHead1.82' 'GullyHead1.83' 'GullyHead1.84' 'GullyHead1.85' 'GullyHead1.86' 'GullyHead1.87' 'GullyHead1.88' 'GullyHead1.89' 'GullyHead1.90' 'GullyHead1.91' 'GullyHead1.92' 'GullyHead1.93' 'GullyHead1.94' 'GullyHead1.95' 'GullyHead1.96' 'GullyHead1.97' 'GullyHead1.98' 'GullyHead1.99' 'GullyHead1.100'
+    no_gradients
+    no_hessians

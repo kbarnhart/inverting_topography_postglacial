@@ -1,0 +1,11 @@
+statistic_type,short_name,long_name,units,value,value,value,value,value
+,,,,Historical,RCP 4.5,RCP 4.5,RCP 8.5,RCP 8.5
+,,,,1970-1999,2020-2049,2070-2099,2020-2049,2070-2099
+mean,mean_storm__intensity,Mean Wet Day Totals,m/year,2.3047275,2.4143025,2.45448,2.4069975,2.5604025
+mean,intermittency_factor,Mean Wet Day Frequency,-,0.481,0.484,0.482,0.486,0.481
+mean,precip_shape_factor,Shape Parameter C,-,0.82,0.77,0.76,0.78,0.75
+mean,infiltration_capacity,Mean Daily Infiltration Capacity,m/year,5.5,,,,
+std,mean_storm__intensity,Mean Wet Day Totals,m/year,1.789725,1.789725,1.789725,1.789725,1.789725
+std,intermittency_factor,Mean Wet Day Frequency,-,0.004,0.006,0.008,0.006,0.014
+std,precip_shape_factor,Shape Parameter C,-,0.03,0.05,0.07,0.06,0.04
+std,infiltration_capacity,Mean Daily Infiltration Capacity,m/year,0,0,0,0,0

@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_800.lowering_future_1.dem24fil_ext.constant_climate.GWPlume1.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_800/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_800/lowering_future_1.dem24fil_ext.constant_climate/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_800/lowering_future_1.dem24fil_ext.constant_climate/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 3
+    descriptors = 'K_rock_sp_exp' 'linear_diffusivity_exp' 'K_till_sp_exp'
+    lower_bounds = -8.0 -2.0 -4.0
+    upper_bounds = -4.0 -1.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'GWPlume1.0' 'GWPlume1.1' 'GWPlume1.2' 'GWPlume1.3' 'GWPlume1.4' 'GWPlume1.5' 'GWPlume1.6' 'GWPlume1.7' 'GWPlume1.8' 'GWPlume1.9' 'GWPlume1.10' 'GWPlume1.11' 'GWPlume1.12' 'GWPlume1.13' 'GWPlume1.14' 'GWPlume1.15' 'GWPlume1.16' 'GWPlume1.17' 'GWPlume1.18' 'GWPlume1.19' 'GWPlume1.20' 'GWPlume1.21' 'GWPlume1.22' 'GWPlume1.23' 'GWPlume1.24' 'GWPlume1.25' 'GWPlume1.26' 'GWPlume1.27' 'GWPlume1.28' 'GWPlume1.29' 'GWPlume1.30' 'GWPlume1.31' 'GWPlume1.32' 'GWPlume1.33' 'GWPlume1.34' 'GWPlume1.35' 'GWPlume1.36' 'GWPlume1.37' 'GWPlume1.38' 'GWPlume1.39' 'GWPlume1.40' 'GWPlume1.41' 'GWPlume1.42' 'GWPlume1.43' 'GWPlume1.44' 'GWPlume1.45' 'GWPlume1.46' 'GWPlume1.47' 'GWPlume1.48' 'GWPlume1.49' 'GWPlume1.50' 'GWPlume1.51' 'GWPlume1.52' 'GWPlume1.53' 'GWPlume1.54' 'GWPlume1.55' 'GWPlume1.56' 'GWPlume1.57' 'GWPlume1.58' 'GWPlume1.59' 'GWPlume1.60' 'GWPlume1.61' 'GWPlume1.62' 'GWPlume1.63' 'GWPlume1.64' 'GWPlume1.65' 'GWPlume1.66' 'GWPlume1.67' 'GWPlume1.68' 'GWPlume1.69' 'GWPlume1.70' 'GWPlume1.71' 'GWPlume1.72' 'GWPlume1.73' 'GWPlume1.74' 'GWPlume1.75' 'GWPlume1.76' 'GWPlume1.77' 'GWPlume1.78' 'GWPlume1.79' 'GWPlume1.80' 'GWPlume1.81' 'GWPlume1.82' 'GWPlume1.83' 'GWPlume1.84' 'GWPlume1.85' 'GWPlume1.86' 'GWPlume1.87' 'GWPlume1.88' 'GWPlume1.89' 'GWPlume1.90' 'GWPlume1.91' 'GWPlume1.92' 'GWPlume1.93' 'GWPlume1.94' 'GWPlume1.95' 'GWPlume1.96' 'GWPlume1.97' 'GWPlume1.98' 'GWPlume1.99' 'GWPlume1.100'
+    no_gradients
+    no_hessians

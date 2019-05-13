@@ -1,0 +1,45 @@
+Model Name,ID,First Element,Second Element,Third Element, Model Type
+Basic,000,Basic,Basic,Basic, Base Model
+BasicVm,001,Vm,Vm,Vm, One Component
+BasicTh,002,Th,Th,Th, One Component
+BasicSs,004,Ss,Ss,Ss, One Component
+BasicDd,008,Dd,Dd,Dd, One Component
+BasicHy,010,Hy,Hy,Hy, One Component
+BasicThHy,012,Th,Hy,, Two Component
+BasicSsHy,014,Ss,Hy,, Two Component
+BasicDdHy,018,Dd,Hy,, Two Component
+BasicHyFi,030,Hy,Fi,, Two Component
+BasicCh,040,Ch,Basic,, One Component
+BasicDy,080,Dy,Basic,, One Component
+BasicThDy,082,Th,Dy,, Two Component
+BasicSsDy,084,Ss,Dy,, Two Component
+BasicHyDy,090,Hy,Dy,, Two Component
+BasicSt,100,St,St,, One Component
+BasicThSt,102,Th,St,, Two Component
+BasicSsSt,104,Ss,St,, Two Component
+BasicDdSt,108,Dd,St,, Two Component
+BasicHySt,110,Hy,St,, Two Component
+BasicDySt,180,Dy,St,, Two Component
+BasicVs,200,Vs,Vs,, One Component
+BasicThVs,202,Th,Vs,, Two Component
+BasicSsVs,204,Ss,Vs,, Two Component
+BasicDdVs,208,Dd,Vs,, Two Component
+BasicHyVs,210,Hy,Vs,, Two Component
+BasicDyVs,280,Dy,Vs,, Two Component
+BasicStVs,300,St,Vs,, Two Component
+BasicDyStVs,380,,Basic,Basic,
+BasicSa,400,Sa,Sa,, One Component
+BasicHySa,410,Hy,Sa,, Two Component
+BasicChSa,440,Ch,Sa,, Two Component
+BasicVsSa,600,Vs,Sa,, Two Component
+BasicRt,800,Rt,Rt,, One Component
+BasicThRt,802,Th,Rt,, Two Component
+BasicSsRt,804,Ss,Rt,, Two Component
+BasicDdRt,808,Dd,Rt,, Two Component
+BasicHyRt,810,Hy,Rt,, Two Component
+BasicChRt,840,Ch,Rt,, Two Component
+BasicSsDd,00C,Ss,Dd,, Two Component
+BasicVsRt,A00,Vs,Rt,, Two Component
+BasicSaRt,C00,Sa,Rt,, Two Component
+BasicCv,CCC,Cv,Cv,, One Component
+BasicChRtTh,842,Ch,Rt,Th,Three Component

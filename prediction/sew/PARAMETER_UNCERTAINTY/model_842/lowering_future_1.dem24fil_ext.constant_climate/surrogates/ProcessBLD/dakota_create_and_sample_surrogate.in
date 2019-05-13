@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_842.lowering_future_1.dem24fil_ext.constant_climate.ProcessBLD.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_842/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_842/lowering_future_1.dem24fil_ext.constant_climate/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_842/lowering_future_1.dem24fil_ext.constant_climate/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 6
+    descriptors = 'K_rock_sp_exp' 'K_till_sp_exp' 'rock_erosion__threshold_exp' 'till_erosion__threshold_exp' 'linear_diffusivity_exp' 'slope_crit'
+    lower_bounds = -4.0 -4.0 -1.0 -3.0 -3.0 0.0
+    upper_bounds = -3.0 -2.0 1.0 -0.0 -1.0 1.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'ProcessBLD.0' 'ProcessBLD.1' 'ProcessBLD.2' 'ProcessBLD.3' 'ProcessBLD.4' 'ProcessBLD.5' 'ProcessBLD.6' 'ProcessBLD.7' 'ProcessBLD.8' 'ProcessBLD.9' 'ProcessBLD.10' 'ProcessBLD.11' 'ProcessBLD.12' 'ProcessBLD.13' 'ProcessBLD.14' 'ProcessBLD.15' 'ProcessBLD.16' 'ProcessBLD.17' 'ProcessBLD.18' 'ProcessBLD.19' 'ProcessBLD.20' 'ProcessBLD.21' 'ProcessBLD.22' 'ProcessBLD.23' 'ProcessBLD.24' 'ProcessBLD.25' 'ProcessBLD.26' 'ProcessBLD.27' 'ProcessBLD.28' 'ProcessBLD.29' 'ProcessBLD.30' 'ProcessBLD.31' 'ProcessBLD.32' 'ProcessBLD.33' 'ProcessBLD.34' 'ProcessBLD.35' 'ProcessBLD.36' 'ProcessBLD.37' 'ProcessBLD.38' 'ProcessBLD.39' 'ProcessBLD.40' 'ProcessBLD.41' 'ProcessBLD.42' 'ProcessBLD.43' 'ProcessBLD.44' 'ProcessBLD.45' 'ProcessBLD.46' 'ProcessBLD.47' 'ProcessBLD.48' 'ProcessBLD.49' 'ProcessBLD.50' 'ProcessBLD.51' 'ProcessBLD.52' 'ProcessBLD.53' 'ProcessBLD.54' 'ProcessBLD.55' 'ProcessBLD.56' 'ProcessBLD.57' 'ProcessBLD.58' 'ProcessBLD.59' 'ProcessBLD.60' 'ProcessBLD.61' 'ProcessBLD.62' 'ProcessBLD.63' 'ProcessBLD.64' 'ProcessBLD.65' 'ProcessBLD.66' 'ProcessBLD.67' 'ProcessBLD.68' 'ProcessBLD.69' 'ProcessBLD.70' 'ProcessBLD.71' 'ProcessBLD.72' 'ProcessBLD.73' 'ProcessBLD.74' 'ProcessBLD.75' 'ProcessBLD.76' 'ProcessBLD.77' 'ProcessBLD.78' 'ProcessBLD.79' 'ProcessBLD.80' 'ProcessBLD.81' 'ProcessBLD.82' 'ProcessBLD.83' 'ProcessBLD.84' 'ProcessBLD.85' 'ProcessBLD.86' 'ProcessBLD.87' 'ProcessBLD.88' 'ProcessBLD.89' 'ProcessBLD.90' 'ProcessBLD.91' 'ProcessBLD.92' 'ProcessBLD.93' 'ProcessBLD.94' 'ProcessBLD.95' 'ProcessBLD.96' 'ProcessBLD.97' 'ProcessBLD.98' 'ProcessBLD.99' 'ProcessBLD.100'
+    no_gradients
+    no_hessians

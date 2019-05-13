@@ -1,0 +1,48 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'wv_model_204_beale.dat'
+
+list_parameter_study
+  list_of_points =
+-4.75570460976	-4.59280850577	-2056.82215307	
+-2.01097258024	0.83299638757	2656.82215307	
+-4.21167843758	-6.37455297545	-828.513783194	
+-2.55499875242	2.61474085725	1428.51378319	
+-4.5746521222	-3.74814214017	-2415.00537169	
+-2.1920250678	-0.0116699780272	3015.00537169	
+
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R1'
+
+variables
+  id_variables = 'V1'
+  continuous_design = 3
+    descriptors = K_ss_exp linear_diffusivity_exp K_hydraulic_conductivity
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/sew/EGO/model_204/lowering_history_0.pg24f_ic5etch/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/gully/EGO/model_204/lowering_history_0.pg24f_ic5etch'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/sew/EGO/model_204/lowering_history_0.pg24f_ic5etch/beale/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 20
+    response_descriptors = chi_elev_1 chi_elev_2 chi_elev_3 chi_elev_4 chi_elev_5 chi_elev_6 chi_elev_7 chi_elev_8 chi_elev_9 chi_elev_10 chi_elev_11 chi_elev_12 chi_elev_13 chi_elev_14 chi_elev_15 chi_elev_16 chi_elev_17 chi_elev_18 chi_elev_19 chi_elev_20
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    no_gradients
+    no_hessians

@@ -1,0 +1,133 @@
+# -*- coding: utf-8 -*-
+"""
+Driver model for Landlab Model {ModelID} {ModelName}
+
+Katy Barnhart March 2017
+"""
+import subprocess
+import os
+import sys
+import time
+import resource
+import glob
+
+pngs = glob.glob('*.png')
+if len(pngs) > 0:
+  run_model = False
+else:
+  run_model = True
+
+if run_model:
+
+    from metric_calculator import NCExtractor
+    from erosion_model import {ModelUsed} as Model
+    from landlab import imshow_grid
+    import numpy as np
+
+    # set files and directories used to set input templates.
+    # Files and directories.
+    input_file = 'inputs.txt'
+
+    start_time = time.time()
+    with open('usage.txt', 'a') as usage_file:
+        usage_file.write(time.ctime()+'\n')
+
+    #plan for output files
+    output_fields =['topographic__elevation']
+
+    # write usage
+    with open('usage.txt', 'a') as usage_file:
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        usage_file.write('\n\nUsage Before Running Model: \n')
+        for name, desc in [
+            ('ru_utime', 'User time'),
+            ('ru_stime', 'System time'),
+            ('ru_maxrss', 'Max. Resident Set Size'),
+            ('ru_ixrss', 'Shared Memory Size'),
+            ('ru_idrss', 'Unshared Memory Size'),
+            ('ru_isrss', 'Stack Size'),
+            ('ru_inblock', 'Block inputs'),
+            ('ru_oublock', 'Block outputs'),
+            ]:
+            usage_file.write('%-25s (%-10s) = %s \n'%(desc, name, getattr(usage, name)))
+
+    # initialized the model
+    model = Model(input_file)
+
+    # add noise to the topography
+    seed = model.params['seed']
+    noise_std = float(model.params['noise_std'])
+
+    surface_noise = noise_std*np.random.randn(sum(model.data_nodes))
+
+    model.z[model.data_nodes] += surface_noise
+
+    model.run(output_fields=output_fields)
+
+    with open('usage.txt', 'a') as usage_file:
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        usage_file.write('\n\nUsage After Running Model: \n')
+        for name, desc in [
+            ('ru_utime', 'User time'),
+            ('ru_stime', 'System time'),
+            ('ru_maxrss', 'Max. Resident Set Size'),
+            ('ru_ixrss', 'Shared Memory Size'),
+            ('ru_idrss', 'Unshared Memory Size'),
+            ('ru_isrss', 'Stack Size'),
+            ('ru_inblock', 'Block inputs'),
+            ('ru_oublock', 'Block outputs'),
+            ]:
+            usage_file.write('%-25s (%-10s) = %s \n'%(desc, name, getattr(usage, name)))
+
+    # for the csv points, pull out each
+    points_list = model.params['points_file']
+
+    output_file_names = {}
+    for it in range(model.iteration):
+        output_file_names[it] = model.params['output_filename'] + \
+                                        str(it).zfill(4) + \
+                                        '.nc'
+
+    nce = NCExtractor(output_file_names, points_list)
+    nce.extract_values()
+
+    # write out metrics as "elevation_at_points_df.csv' and as Dakota expects
+    nce.reordered_df.to_csv('elevation_at_points_df.csv')
+
+    # make a figure.
+    model_dem_name = model.params['output_filename'] + \
+        str(model.iteration-1).zfill(4) + \
+            '.nc'
+
+    cur_working = os.getcwd()
+    cur_working_split = cur_working.split(os.path.sep)
+    cur_working_split.append('png')
+    try:
+        cut_ind = cur_working_split.index('results')+3
+    except:
+        cut_ind = cur_working_split.index('study3py')+3
+
+    fig_name = '.'.join(cur_working_split[cut_ind:])
+
+    imshow_grid(model.grid, model.z, vmin=990, vmax=1940, cmap='viridis', output=fig_name)
+
+    imshow_grid(model.grid, 'cumulative_erosion__depth', vmin=-250, vmax=250, cmap='RdBu', output=fig_name[:-4]+'.elev_change.png')
+
+    with open('usage.txt', 'a') as usage_file:
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        usage_file.write('\n\nUsage At End of Job: \n')
+        for name, desc in [
+            ('ru_utime', 'User time'),
+            ('ru_stime', 'System time'),
+            ('ru_maxrss', 'Max. Resident Set Size'),
+            ('ru_ixrss', 'Shared Memory Size'),
+            ('ru_idrss', 'Unshared Memory Size'),
+            ('ru_isrss', 'Stack Size'),
+            ('ru_inblock', 'Block inputs'),
+            ('ru_oublock', 'Block outputs'),
+            ]:
+            usage_file.write('%-25s (%-10s) = %s \n'%(desc, name, getattr(usage, name)))
+
+        end_time = time.time()
+        usage_file.write('\n\n'+time.ctime()+'\n')
+        usage_file.write('Elapsed Time: '+str(end_time-start_time)+'\n')

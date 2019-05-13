@@ -1,0 +1,19 @@
+# Inputs for Model: model_000
+# Basic
+# use Basic
+run_duration: 13000.0
+output_interval: 13000.0
+meters_to_feet: True
+DEM_filename: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/dems/sew/initial_conditions/pg24f_ic5etch.txt
+outlet_id: 178576
+outlet_lowering_file_path: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/lowering_histories/lowering_history_0.txt
+output_filename: model_000
+modern_dem_name: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/dems/sew/modern/dem24fil_ext.txt
+modern_outlet_elevation: 1221.202
+category_file : /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/chi_elev_categories/sew.chi_elev_cat.20.txt
+category_weight_file: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/weights/sew.chi_elev_weight.20.txt
+dt: 10
+K_sp_exp: {K_sp_exp}
+m_sp: 0.5
+n_sp: 1
+linear_diffusivity_exp: {linear_diffusivity_exp}

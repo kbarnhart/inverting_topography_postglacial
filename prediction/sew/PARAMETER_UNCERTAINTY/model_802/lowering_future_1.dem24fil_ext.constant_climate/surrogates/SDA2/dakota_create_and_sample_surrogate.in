@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_802.lowering_future_1.dem24fil_ext.constant_climate.SDA2.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_1.dem24fil_ext.constant_climate/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_1.dem24fil_ext.constant_climate/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 5
+    descriptors = 'linear_diffusivity_exp' 'rock_erosion__threshold_exp' 'till_erosion__threshold_exp' 'K_rock_sp_exp' 'K_till_sp_exp'
+    lower_bounds = -2.0 -3.0 -4.0 -6.0 -4.0
+    upper_bounds = -1.0 1.0 -1.0 -3.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'SDA2.0' 'SDA2.1' 'SDA2.2' 'SDA2.3' 'SDA2.4' 'SDA2.5' 'SDA2.6' 'SDA2.7' 'SDA2.8' 'SDA2.9' 'SDA2.10' 'SDA2.11' 'SDA2.12' 'SDA2.13' 'SDA2.14' 'SDA2.15' 'SDA2.16' 'SDA2.17' 'SDA2.18' 'SDA2.19' 'SDA2.20' 'SDA2.21' 'SDA2.22' 'SDA2.23' 'SDA2.24' 'SDA2.25' 'SDA2.26' 'SDA2.27' 'SDA2.28' 'SDA2.29' 'SDA2.30' 'SDA2.31' 'SDA2.32' 'SDA2.33' 'SDA2.34' 'SDA2.35' 'SDA2.36' 'SDA2.37' 'SDA2.38' 'SDA2.39' 'SDA2.40' 'SDA2.41' 'SDA2.42' 'SDA2.43' 'SDA2.44' 'SDA2.45' 'SDA2.46' 'SDA2.47' 'SDA2.48' 'SDA2.49' 'SDA2.50' 'SDA2.51' 'SDA2.52' 'SDA2.53' 'SDA2.54' 'SDA2.55' 'SDA2.56' 'SDA2.57' 'SDA2.58' 'SDA2.59' 'SDA2.60' 'SDA2.61' 'SDA2.62' 'SDA2.63' 'SDA2.64' 'SDA2.65' 'SDA2.66' 'SDA2.67' 'SDA2.68' 'SDA2.69' 'SDA2.70' 'SDA2.71' 'SDA2.72' 'SDA2.73' 'SDA2.74' 'SDA2.75' 'SDA2.76' 'SDA2.77' 'SDA2.78' 'SDA2.79' 'SDA2.80' 'SDA2.81' 'SDA2.82' 'SDA2.83' 'SDA2.84' 'SDA2.85' 'SDA2.86' 'SDA2.87' 'SDA2.88' 'SDA2.89' 'SDA2.90' 'SDA2.91' 'SDA2.92' 'SDA2.93' 'SDA2.94' 'SDA2.95' 'SDA2.96' 'SDA2.97' 'SDA2.98' 'SDA2.99' 'SDA2.100'
+    no_gradients
+    no_hessians

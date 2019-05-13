@@ -1,0 +1,34 @@
+# Step two of three: call Landlab Model 000 with DAKOTA for
+# Centered Parameter Study
+# Author Katherine Barnhart
+# Date March 2017
+#
+# Call with:
+#   $ dakota -i dakota_centered_modeling.in -o dakota_centered_modeling.out &> run.log
+
+method
+centered_parameter_study
+  steps_per_variable = {steps_per_parameter}
+  step_vector = {step_vector}
+
+variables,
+  continuous_design = {number_of_parameters}
+    initial_point =   {initial_point}
+	descriptors = {parameter_descriptors}
+
+interface,
+  fork,
+    analysis_driver = 'python {analysis_driver} {run_directory}' # must be executable
+    parameters_file = 'params.in'
+    results_file = 'results.out'
+    work_directory
+      named 'run'
+      directory_tag
+      directory_save
+    file_save
+
+responses,
+  response_functions = {number_of_metrics}
+  response_descriptors = {metrics}
+  no_gradients
+  no_hessians

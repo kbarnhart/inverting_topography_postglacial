@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_802.lowering_future_1.dem24fil_ext.constant_climate.UFrankEdge1.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_1.dem24fil_ext.constant_climate/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_1.dem24fil_ext.constant_climate/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 5
+    descriptors = 'linear_diffusivity_exp' 'rock_erosion__threshold_exp' 'till_erosion__threshold_exp' 'K_rock_sp_exp' 'K_till_sp_exp'
+    lower_bounds = -2.0 -3.0 -4.0 -6.0 -4.0
+    upper_bounds = -1.0 1.0 -1.0 -3.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'UFrankEdge1.0' 'UFrankEdge1.1' 'UFrankEdge1.2' 'UFrankEdge1.3' 'UFrankEdge1.4' 'UFrankEdge1.5' 'UFrankEdge1.6' 'UFrankEdge1.7' 'UFrankEdge1.8' 'UFrankEdge1.9' 'UFrankEdge1.10' 'UFrankEdge1.11' 'UFrankEdge1.12' 'UFrankEdge1.13' 'UFrankEdge1.14' 'UFrankEdge1.15' 'UFrankEdge1.16' 'UFrankEdge1.17' 'UFrankEdge1.18' 'UFrankEdge1.19' 'UFrankEdge1.20' 'UFrankEdge1.21' 'UFrankEdge1.22' 'UFrankEdge1.23' 'UFrankEdge1.24' 'UFrankEdge1.25' 'UFrankEdge1.26' 'UFrankEdge1.27' 'UFrankEdge1.28' 'UFrankEdge1.29' 'UFrankEdge1.30' 'UFrankEdge1.31' 'UFrankEdge1.32' 'UFrankEdge1.33' 'UFrankEdge1.34' 'UFrankEdge1.35' 'UFrankEdge1.36' 'UFrankEdge1.37' 'UFrankEdge1.38' 'UFrankEdge1.39' 'UFrankEdge1.40' 'UFrankEdge1.41' 'UFrankEdge1.42' 'UFrankEdge1.43' 'UFrankEdge1.44' 'UFrankEdge1.45' 'UFrankEdge1.46' 'UFrankEdge1.47' 'UFrankEdge1.48' 'UFrankEdge1.49' 'UFrankEdge1.50' 'UFrankEdge1.51' 'UFrankEdge1.52' 'UFrankEdge1.53' 'UFrankEdge1.54' 'UFrankEdge1.55' 'UFrankEdge1.56' 'UFrankEdge1.57' 'UFrankEdge1.58' 'UFrankEdge1.59' 'UFrankEdge1.60' 'UFrankEdge1.61' 'UFrankEdge1.62' 'UFrankEdge1.63' 'UFrankEdge1.64' 'UFrankEdge1.65' 'UFrankEdge1.66' 'UFrankEdge1.67' 'UFrankEdge1.68' 'UFrankEdge1.69' 'UFrankEdge1.70' 'UFrankEdge1.71' 'UFrankEdge1.72' 'UFrankEdge1.73' 'UFrankEdge1.74' 'UFrankEdge1.75' 'UFrankEdge1.76' 'UFrankEdge1.77' 'UFrankEdge1.78' 'UFrankEdge1.79' 'UFrankEdge1.80' 'UFrankEdge1.81' 'UFrankEdge1.82' 'UFrankEdge1.83' 'UFrankEdge1.84' 'UFrankEdge1.85' 'UFrankEdge1.86' 'UFrankEdge1.87' 'UFrankEdge1.88' 'UFrankEdge1.89' 'UFrankEdge1.90' 'UFrankEdge1.91' 'UFrankEdge1.92' 'UFrankEdge1.93' 'UFrankEdge1.94' 'UFrankEdge1.95' 'UFrankEdge1.96' 'UFrankEdge1.97' 'UFrankEdge1.98' 'UFrankEdge1.99' 'UFrankEdge1.100'
+    no_gradients
+    no_hessians

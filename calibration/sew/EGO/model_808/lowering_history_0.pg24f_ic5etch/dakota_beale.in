@@ -1,0 +1,52 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'wv_model_808_beale.dat'
+
+list_parameter_study
+  list_of_points =
+-6.63309938455	-22.1758283414	-2153.25223966	1290.18462503	-2.2669934298	
+4.03078942755	41.4432458824	2141.25223966	-1302.84860842	-0.402889156405	
+-2.00539075314	-231.204217349	-1483.61099907	1320.96455791	-6.72236282496	
+-0.596919203862	250.47163489	1471.61099907	-1333.6285413	4.05248023876	
+-2.91783173324	-40.6166898218	-7087.82976844	1566.35268857	-2.53819907282	
+0.315521776239	59.8841073628	7075.82976844	-1579.01667196	-0.131683513378	
+-0.368154209218	52.7767887632	1497.16079942	-7415.70907854	-0.323667255144	
+-2.23415574778	-33.5093712222	-1509.16079942	7403.04509515	-2.34621533106	
+-2.21946112844	-230.121201444	-1580.58400419	1378.22944	-6.74669877371	
+-0.382848828565	249.388618985	1568.58400419	-1390.89342339	4.07681618751	
+
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R1'
+
+variables
+  id_variables = 'V1'
+  continuous_design = 5
+    descriptors = linear_diffusivity_exp thresh_change_per_depth erosion__threshold_exp K_rock_sp_exp K_till_sp_exp
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/sew/EGO/model_808/lowering_history_0.pg24f_ic5etch/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/gully/EGO/model_808/lowering_history_0.pg24f_ic5etch'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/sew/EGO/model_808/lowering_history_0.pg24f_ic5etch/beale/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 20
+    response_descriptors = chi_elev_1 chi_elev_2 chi_elev_3 chi_elev_4 chi_elev_5 chi_elev_6 chi_elev_7 chi_elev_8 chi_elev_9 chi_elev_10 chi_elev_11 chi_elev_12 chi_elev_13 chi_elev_14 chi_elev_15 chi_elev_16 chi_elev_17 chi_elev_18 chi_elev_19 chi_elev_20
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    no_gradients
+    no_hessians

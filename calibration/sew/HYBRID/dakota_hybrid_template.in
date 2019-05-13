@@ -1,0 +1,81 @@
+# Dakota input file
+environment
+  top_method_pointer = 'HS'
+  tabular_data
+  tabular_data_file = 'wv_{model_name}_calib.dat'
+
+method
+  id_method = 'HS'
+  hybrid sequential
+  method_pointer_list = 'DR' 'GN'
+
+method
+  id_method = 'DR'
+  ncsu_direct
+  final_solutions = 5
+  model_pointer = 'M1'
+  max_iterations = 115
+  max_function_evaluations = 115
+
+method
+  optpp_g_newton
+    id_method = 'GN'
+    convergence_tolerance = 1e-08
+    search_method = gradient_based_line_search
+    max_step = 0.866025403784
+    gradient_tolerance = 1e-06
+    model_pointer = 'M2'
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R1'
+
+model
+  id_model = 'M2'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R2'
+
+variables
+  id_variables = 'V1'
+  continuous_design = {num_variables}
+    descriptors = {variable_names}
+    initial_point = {initial_point}
+    lower_bounds = {lower_bounds}
+    upper_bounds = {upper_bounds}
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/sew/HYBRID/{model_name}/{lowering_history}.{initial_condition}/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/sew/HYBRID/{model_name}/{lowering_history}.{initial_condition}'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/sew/HYBRID/{model_name}/{lowering_history}.{initial_condition}/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R1'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    no_gradients
+  no_hessians
+
+responses
+  id_responses = 'R2'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    numerical_gradients
+      method_source dakota
+      interval_type forward
+    no_hessians

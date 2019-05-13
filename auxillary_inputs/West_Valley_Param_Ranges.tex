@@ -1,0 +1,410 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\noindent 
+\centerline{\textbf{\Huge{West Valley Parameter Ranges}}}
+\\
+\\
+\\
+\noindent
+{\textbf{\Large{\underline{Fluvial Parameters}}}}
+\\
+\\
+\noindent
+{\textbf{Channel erodilibity for uniform substrate}}
+\\
+\\
+\noindent
+{\textbf{Threshold for channel erosion into uniform substrate}}
+\\
+For models that do not explicitly account for rock/till layers, we use a range of channel erosion thresholds bounded by those found for rock and till (see below). Critical shear stress = 5 - 130 Pa, and $\omega_c$ = 0.35 to 46. 
+\\
+\\
+\noindent
+{\textbf{Change in channel erosion threshold with depth}}
+\\
+Gran et al. (2013) showed that the $D_{50}$ can increase with increasing incision depth as the channel incises through glacial sediments and terraces. For this model, we will use the lower bound of erosion threshold from jet tests of 10 Pa for the inititation of the model. Once the channel incises to the modern depth of 160 ft, we can use the upper bound of 130 Pa for bedrock incision (see below).
+\\
+\noindent
+{\textbf{Channel erodibility into rock}}
+\\
+\\
+\noindent
+{\textbf{Channel erodibility into till}}
+\\
+\\
+\noindent
+{\textbf{Threshold for channel erodibility into rock}}
+\\
+The critical shear stress for bedrock should be at least as large as that of the $D_{50}$, for till (see below), and possibly larger. To be safe, we suggest using the lower limit of the threshold for till and an upper limit threshold twice that of the upper limit calculated using the $D_{50}$, approximately 130 Pa. This corresponds to $\omega_c$ = 0.35 to 46 for use in the stream power formulation. 
+\\
+\\
+\noindent
+{\textbf{Threshold for channel erodibility into till}}
+\\
+To estimate the critical shear stress for till, we can use the $D_{50}$ = 5cm for the field site (Bennet et al) using the equation:
+\begin{equation}
+\tau_c = \theta_c (\sigma - \rho ) g D_{50}
+\end{equation}
+Buffington and Montgomery (1999) found a lower limit of the critical Shields stress $\theta_c$ to be 0.03, agreeing with other studies (Parker and Klingeman, 1982; Meyer-Peter and Muller, 1984). We use 0.08 as an upper limit, based on experiments in mixed grain size beds with bedforms (Church et al., 1998). Using this range for critical Shields stress, with sediement density $\sigma = 2650$ kg/m3 and $D_{50}$ = 5cm gives a range for critical shear stress of 24 - 64 Pa. 
+\\
+On-site field measurements using the Scour Depth method show a range of critical shear stress from 12 to 90 Pa. Therefore, we recommend using a range of 5 to 100 Pa to account for uncertainty in the estimate of $D_{50}$.
+\\
+\\
+\noindent
+We can convert the critical shear stress to $\omega_c$ for use in the stream power model:
+
+\begin{equation}
+\omega_c = \tau_c U_{*c} = \tau_c^{3/2} / \rho^{1/2} = 0.031623 \tau_c^{3/2}
+\end{equation}
+\noindent
+Using the values reported above, we obtain a range of $\omega_c$ = 0.35 to 31.62.
+\\
+\\
+\noindent
+{\textbf{Rock-till contact zone width}}
+\\
+Parameter used for numerical stability- fixed at 10 ft. 
+\\
+\\
+\noindent
+{\textbf{n}}
+\\
+n = 0.5 to 3 is a reasonable range of values (Hancock et al., 1987).
+\noindent
+Recent research has shown that field values are typically n > 1. 
+\\
+\\
+\noindent
+{\textbf{m}}
+\\
+Tucker and Whipple (2002) suggest using a range from 0 to 1. 
+\\
+\\
+\noindent
+{\textbf{Vs}}
+\\
+For a lower limit on settling velocity, we estimate the clear-water settling velocity for very fine quartz sand (1/16 mm) using the equation from Ferguson and Church (2004):
+\begin{equation}
+w = \frac{RgD^2}{C_1\nu+(0.75C_2gD^3)^{0.5}} 
+\end{equation}
+where R is the submerged specific gravity of quartz = 1.65, $C_1$ is a constant = 18, $C_2$ is a constant = 0.4, $\nu$ is the viscosity of water at $20^\circ$ C = 1$\times10^{-6}$ kg/ms, and D = 1/16 mm. From this we obtain a lower bound on settling velocity of 0.0033 m/s. 
+\\
+For an upper bound, we an estimate of 1 m/s for approximately 5cm quartz grains. 
+\\
+\\
+\\
+\noindent
+{\textbf{H sp star}
+\\
+Characteristic depth of alluvial scour relevant for bedrock incision. The lower limit should be approximately the $D_{50}$, which is 5cm for the field site (Bennet et al). The upper limit should be approximately the characteristic flood depth, or 1m. 
+\\
+\\
+\\
+\noindent
+{\textbf{\Large{\underline{Hillslope Parameters}}}}
+\\
+\\
+\noindent
+{\textbf{Hillslope diffusivity}}
+\\
+\\
+\noindent
+{\textbf{Soil transport decay depth}}
+\\
+This parameter is defined in Johnstone and Hilley (2014) as the scaling depth of the velocity profile of soil. In their study they use values of h* between 0.12 m and 0.33 m (Johnstone and Hilley, 2014). When h* $>$$>$ soil depth, soil moves as plug flow. Given the variable soil thickness at West Valley and the sensitivity of soil flux to this parameter, we recommend using a range between 0.1 and 1 m. 
+\\
+\\
+\noindent
+{\textbf{Initial soil thickness}}
+\\
+\\
+\noindent
+{\textbf{Maximum soil production rate}}
+\\
+Various studies have used cosmogenic radionuclides to estimate maximum soil production rates. Here are measured rates (in m/yr) and their associated lithology and field settings:
+
+\begin{itemize}
+  \item 2.68$\times10^{-4}$ (Heimsath 2001a)
+\\
+Oregon Coast Range, in humid-temperate, hilly landscape underlain by relatively uniform, unweathered arkosic
+sandstone and siltstone. 
+  \item 7.7$\times10^{-5}$ (Heimsath 1997,1999)
+\\
+Tennessee Valley in Marin County, California. Underlying bedrock is greywacke. 
+  \item 1.43$\times10^{-4}$ (Heimsath 2001b)
+\\Southeastern highlands of Australia, characterized by cool climate and heavy rainfall. Underlying bedrock types are Ordovician metasediments and granite. 
+  \item 1$\times10^{-3}$ (Heimsath 2012)
+\\San Gabriel Mountains in California. 
+  \item 7$\times10^{-6}$ (Small 1997)
+\\Alpine environments across the western US. Lithologies represented are granite and gneiss. 
+\end{itemize}
+\noindent
+Based on these studies, we recommend using a range of 1$\times10^{-6}$ to 1$\times10^{-3}$ m/yr.
+\\
+\\
+\noindent
+{\textbf{Soil production decay depth}}
+\\
+Studies have shown the soil production decay depth to be approximately 0.5 m in a number a sites around the world (Pelletier 2009, Heimsath 1997, 1999, 2001a,b). Because weathering rate is fairly sensitive to this parameter, we recommend using a range of 0.2-1 m.  
+\\
+\\
+\noindent
+{\textbf{Critical slope}}
+The critical slope for nonlinear sediment flux has been estimated in a number of studies:
+
+\begin{itemize}
+\item 1.4 (Roering 1999)
+Oregon Coast Range
+
+\item 1.25 (Ganti 2012)
+Oregon Coast Range
+
+\item 1.2 (Roering 2007)
+Oregon Coast Range and Gabilan Mesa
+
+\item 0.6 (Roering 2001) 
+Physical experiments with a pile of loose sand
+\end{itemize}
+\noindent
+Based on these studies, we recommend using a range for critical slope between 1 and 1.4. 
+\\
+\\
+\noindent
+{\textbf{\Large{\underline{Hydrologic Parameters}}}}
+\\
+\\
+{\textbf{Hydraulic conductivity}}
+\\
+\noindent
+We use a range of hydraulic conductivities found for glacial till from a number of field studies: 
+\noindent
+\begin{itemize}
+\item $10^-6$ to $10^-2$ mm/s (Mohanty et al., 1994)
+
+\item $10^-4$ mm/s (Strobel 1993)
+
+\item $5 * 10^-4$ to  - $5 * 10^-2$ (Ronayne 2012)
+\end{itemize}
+\noindent
+We use a range of $10^-6$ to $10^-2$ mm/s.
+\\
+\\
+\noindent
+{\textbf{Recharge Rate}}
+\\
+\noindent
+To calculate the saturation area scale, we need to know the recharge rate. We use a range from field and numerical modeling studies of recharge rates through glacial till:
+\begin{itemize}
+\item 
+0.035 to 0.051 m/yr (Daniels, 1991)
+\item 
+0.04 to 0.19 m/yr (Bauer 1997) 
+\item
+0.69 m/yr (Masterson, 2007)
+\end{itemize}
+\noindent
+Based on these studies, we use a range between 0.03 m/yr and 1 m/yr. 
+\\
+\\
+{\textbf{Saturation area scale}}
+\\
+\noindent
+Saturation area scale will be dynamically calculated from saturated conductivity, soil thickness, cell size and recharge rate (see value ranges for conductivity and recharge rate above):
+
+\begin{equation}
+A_{sat} = \frac{KH(dx)}{R}
+\end{equation}
+\\
+\noindent
+{\textbf{Infiltration capacity}}
+\\
+Measured on site (Report 2) to be between $5 * 10^-1$ and $8.52 * 10^2$ mm/hr.
+\\
+\\
+{\textbf{Mean annual precipitation}}
+\\
+\noindent
+The mean annual rainfall between 1981 and 2016 is 43.6 inches/yr. The range of total yearly rainfall from this time period has a minimum of 32.11 inches and a maximum of 56.07 inches per year. To account for extremes beyond the range of observations, we use a yearly total rainfall range of 20 - 60 inches. 
+\\
+\\
+\noindent
+{\textbf{Fraction of precipitation days}}
+\\
+\noindent
+We use meteorological data from a weather station near West Valley, in Franklinville (weather station ID GHCND:USC00303025: see data downloaded from NOAA). While closer weather stations exist, they do not have the yearly precipitation data needed for these parameters. Data from 1981-2016 report total yearly and monthly rainfall, as well as number of days of rainfall above a threshold. The data show that the most rainfall occurs on days with 0.5 to 1 inch of rainfall; we chose to use the number of these days as a measure of storm duration. The mean number of days with rainfall between 0.5 and 1 inch during the recorded history is 25. Therefore, the fraction of precipitation days is $\frac{25}{365}$.
+\\
+\\
+\noindent
+{\textbf{Mean storm duration}}
+ Assuming for model simplicity that each storm lasts 1 day, then the storm duration parameters are as follows:
+\noindent
+\begin{equation}
+\mathrm{\ Mean \ storm \ duration} = 1 \mathrm{\ day};
+\end{equation}
+\noindent
+{\textbf{Mean interstorm duration}}
+\begin{equation}
+\mathrm{Mean\ Interstorm\ duration} = \frac{365}{\mathrm{\ number \ storm \ days}} = \frac{365}{25} = 14.6 \mathrm{ \ days}
+\end{equation}
+\noindent
+{\textbf{Mean storm depth}}
+\\
+\noindent
+While we use a fixed storm and interstorm duration, we need to test a range of storm depth values. The range of total yearly rainfall from the meteorological data has a minimum of 32.11 inches and a maximum of 56.07 inches per year. To account for extremes beyond the range of observations, we use a yearly total rainfall range of 20 - 70 inches. To turn this into storm duration, we divide this total rainfall by the number of storm days in a year:
+
+\begin{equation}
+\mathrm{\ mean \ storm \ depth} =  \frac{\mathrm{\ total \ rainfall}}{\mathrm{\ number \ of \ storm \ days}} = 0.8 - 2.8 \mathrm{\ inches/storm}
+\end{equation}
+
+\noindent
+Just to be safe we can round this to 0.5 - 3 inches/storm. 
+\\
+\\
+\noindent
+{\textbf{Rainfall intensity}}
+\\
+Rainfall intensity will be calculated from mean annual precipitation and the fraction of precipitation days:
+\begin{equation}
+I = \frac{MAP}{f}
+\end{equation}
+where I is intensity, MAP is mean annual precipitation, and f is the fraction of precipitation days. 
+\\
+\\
+\\
+\\
+\\
+\\
+\noindent
+{\textbf{\Large{\underline{References}}}}
+\\
+\\
+\noindent
+Bauer, H. H., and Mark C. Mastin. Recharge from precipitation in three small glacial-till-mantled catchments in the Puget Sound Lowland, Washington. US Department of the Interior, US Geological Survey, 1997.
+\\
+\\
+\noindent
+Buffington, John M., and David R. Montgomery. "Effects of hydraulic roughness on surface textures of gravel‐bed rivers." Water Resources Research 35.11 (1999): 3507-3521.
+\\
+\\
+\noindent
+Church, Michael, Marwan A. Hassan, and John F. Wolcott. "Stabilizing self‐organized structures in gravel‐bed stream channels: Field and experimental observations." Water Resources Research 34.11 (1998): 3169-3179.
+\\
+\\
+\noindent
+Daniels, Douglas P., Steven J. Fritz, and Darrell I. Leap. "Estimating recharge rates through unsaturated glacial till by tritium tracing." Ground Water 29.1 (1991): 26-34.
+\\
+\\
+\noindent
+Ferguson, R. I., and M. Church. "A simple universal equation for grain settling velocity." Journal of sedimentary Research 74.6 (2004): 933-937.
+\\
+\\
+\noindent
+Ganti, Vamsi, Paola Passalacqua, and Efi Foufoula‐Georgiou. "A sub‐grid scale closure for nonlinear hillslope sediment transport models." Journal of Geophysical Research: Earth Surface 117.F2 (2012).
+\\
+\\
+\noindent
+Gran, Karen B., et al. "Landscape evolution, valley excavation, and terrace development following abrupt postglacial base-level fall." Geological Society of America Bulletin 125.11-12 (2013): 1851-1864.
+\\
+\\
+\noindent
+Hancock, Gregory S., Robert S. Anderson, and Kelin X. Whipple. "Beyond power: Bedrock river incision process and form." Rivers over rock: Fluvial processes in bedrock channels (1998): 35-60.
+\\
+\\
+\noindent
+Heimsath, Arjun M., et al. "The soil production function and landscape equilibrium." Nature 388.6640 (1997): 358-361.
+\\
+\\
+\noindent
+Heimsath, Arjun M., et al. "Cosmogenic nuclides, topography, and the spatial variation of soil depth." Geomorphology 27.1 (1999): 151-172.
+\\
+\\
+\noindent
+Heimsath, Arjun M., et al. "Stochastic processes of soil production and transport: Erosion rates, topographic variation and cosmogenic nuclides in the Oregon Coast Range." Earth Surface Processes and Landforms 26.5 (2001): 531-552.
+\\
+\\
+\noindent
+Heimsath, Arjun M., et al. "Late Quaternary erosion in southeastern Australia: a field example using cosmogenic nuclides." Quaternary International 83 (2001): 169-185.
+\\
+\\
+\noindent
+Heimsath, Arjun M., Roman A. DiBiase, and Kelin X. Whipple. "Soil production limits and the transition to bedrock-dominated landscapes." Nature Geoscience 5.3 (2012): 210-214.
+\\
+\\
+\noindent
+Johnstone, Samuel A., and George E. Hilley. "Lithologic control on the form of soil-mantled hillslopes." Geology 43.1 (2015): 83-86.
+\\
+\\
+\noindent
+Masterson, John P., et al. Hydrogeology and simulated ground-water flow in the salt pond region of southern Rhode Island. U. S. Geological Survey, 2007.
+\\
+\\
+\noindent
+Meyer-Peter, Eugen, and R. Müller. "Formulas for bed-load transport." IAHR, 1948.
+\\
+\\
+\noindent
+Mohanty, B. P., Ramesh S. Kanwar, and C. J. Everts. "Comparison of saturated hydraulic conductivity measurement methods for a glacial-till soil." Soil Science Society of America Journal 58.3 (1994): 672-677.
+\\
+\\
+\noindent
+Parker, Gary, Peter C. Klingeman, and David G. McLean. "Bedload and size distribution in paved gravel-bed streams." Journal of the Hydraulics Division 108.4 (1982): 544-571.
+\\
+\\
+\noindent
+Pelletier, Jon D., and Craig Rasmussen. "Geomorphically based predictive mapping of soil thickness in upland watersheds." Water Resources Research 45.9 (2009).
+\\
+\\
+\noindent
+Roering, Joshua J., James W. Kirchner, and William E. Dietrich. "Evidence for nonlinear, diffusive sediment transport on hillslopes and implications for landscape morphology." Water Resources Research 35.3 (1999): 853-870.
+\\
+\\
+\noindent
+Roering, Joshua J., et al. "Hillslope evolution by nonlinear creep and landsliding: An experimental study." Geology 29.2 (2001): 143-146.
+\\
+\\
+\noindent
+Roering, Joshua J., J. Taylor Perron, and James W. Kirchner. "Functional relationships between denudation and hillslope form and relief." Earth and Planetary Science Letters 264.1 (2007): 245-258.
+\\
+\\
+\noindent
+Ronayne, Michael J., Tyler B. Houghton, and John D. Stednick. "Field characterization of hydraulic conductivity in a heterogeneous alpine glacial till." Journal of Hydrology 458 (2012): 103-109.
+\\
+\\
+\noindent
+Small, Eric E., et al. "Erosion rates of alpine bedrock summit surfaces deduced from in situ 10Be and 26Al." Earth and Planetary Science Letters 150.3-4 (1997): 413-425.
+\\
+\\
+\noindent
+Strobel, Michael Lee. Hydraulic properties of three types of glacial deposits in Ohio. No. 92-4135. US Geological Survey; Books and Open-File Reports Section [distributor], 1993.
+\\
+\\
+\noindent
+Tucker, G. E., and K. X. Whipple. "Topographic outcomes predicted by stream erosion models: Sensitivity analysis and intermodel comparison." Journal of Geophysical Research: Solid Earth 107.B9 (2002).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

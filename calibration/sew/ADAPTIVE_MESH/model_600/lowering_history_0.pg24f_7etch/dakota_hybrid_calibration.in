@@ -1,0 +1,109 @@
+# Dakota input file
+environment
+  top_method_pointer = 'HS'
+  tabular_data
+  tabular_data_file = 'wv_model_600_calib.dat'
+
+method
+  id_method = 'HS'
+  hybrid sequential
+  method_pointer_list = 'AM' 'GN' 'GN_final'
+
+method
+id_method = 'AM'
+  mesh_adaptive_search
+    seed = 6398
+  variable_neighborhood_search = 0.3
+  max_function_evaluations = 300
+  output verbose
+  model_pointer = 'M1'
+
+method
+  optpp_g_newton
+    id_method = 'GN'
+    convergence_tolerance = 1e-08
+    search_method = gradient_based_line_search
+    max_step = 1.11803398875
+    gradient_tolerance = 1e-06
+    model_pointer = 'M2'
+
+method
+  optpp_g_newton
+    id_method = 'GN_final'
+    convergence_tolerance = 1e-08
+    search_method = gradient_based_line_search
+    max_step = 1.11803398875
+    gradient_tolerance = 1e-06
+    model_pointer = 'M3'
+
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R1'
+
+model
+  id_model = 'M2'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R2'
+
+model
+  id_model = 'M3'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R3'
+
+variables
+  id_variables = 'V1'
+  continuous_design = 5
+    descriptors = 'K_sp_exp' 'linear_diffusivity_exp' 'initial_soil_thickness' 'max_soil_production_rate' 'K_hydraulic_conductivity'
+    initial_point = -4.25 -2.3 1.5 0.00099 0.031
+    lower_bounds = -6.0 -6.3 0.305 1e-06 0.03
+    upper_bounds = -1.0 -1.3 1.52 0.001 300.0
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/sew/ADAPTIVE_MESH/model_600/lowering_history_0.pg24f_7etch/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/sew/ADAPTIVE_MESH/model_600/lowering_history_0.pg24f_7etch'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/sew/ADAPTIVE_MESH/model_600/lowering_history_0.pg24f_7etch/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 20
+    response_descriptors = 'chi_elev_1' 'chi_elev_2' 'chi_elev_3' 'chi_elev_4' 'chi_elev_5' 'chi_elev_6' 'chi_elev_7' 'chi_elev_8' 'chi_elev_9' 'chi_elev_10' 'chi_elev_11' 'chi_elev_12' 'chi_elev_13' 'chi_elev_14' 'chi_elev_15' 'chi_elev_16' 'chi_elev_17' 'chi_elev_18' 'chi_elev_19' 'chi_elev_20'
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    no_gradients
+  no_hessians
+
+responses
+  id_responses = 'R2'
+  calibration_terms = 20
+    response_descriptors = 'chi_elev_1' 'chi_elev_2' 'chi_elev_3' 'chi_elev_4' 'chi_elev_5' 'chi_elev_6' 'chi_elev_7' 'chi_elev_8' 'chi_elev_9' 'chi_elev_10' 'chi_elev_11' 'chi_elev_12' 'chi_elev_13' 'chi_elev_14' 'chi_elev_15' 'chi_elev_16' 'chi_elev_17' 'chi_elev_18' 'chi_elev_19' 'chi_elev_20'
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    numerical_gradients
+      method_source dakota
+      interval_type forward
+    no_hessians
+
+responses
+  id_responses = 'R3'
+  calibration_terms = 20
+    response_descriptors = 'chi_elev_1' 'chi_elev_2' 'chi_elev_3' 'chi_elev_4' 'chi_elev_5' 'chi_elev_6' 'chi_elev_7' 'chi_elev_8' 'chi_elev_9' 'chi_elev_10' 'chi_elev_11' 'chi_elev_12' 'chi_elev_13' 'chi_elev_14' 'chi_elev_15' 'chi_elev_16' 'chi_elev_17' 'chi_elev_18' 'chi_elev_19' 'chi_elev_20'
+    weights = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    numerical_gradients
+      method_source dakota
+      interval_type central
+    no_hessians

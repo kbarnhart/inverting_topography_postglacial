@@ -1,0 +1,129 @@
+# -*- coding: utf-8 -*-
+"""
+Driver model for Landlab Model {ModelID} {ModelName}
+
+Katy Barnhart March 2017
+"""
+import resource, time
+start_time = time.time()
+with open('simple_usage.txt', 'a') as usage_file:
+    usage_file.write(time.ctime()+'\n')
+
+import os
+    
+from yaml import load
+
+from erosion_model import {ModelUsed} as Model
+from metric_calculator import MetricDifference
+
+from landlab import imshow_grid
+
+#DAKOTA stuff: setting input files
+input_file = 'inputs.txt' #DAKOTA creates this
+nsteps = 100
+
+# load the params file to get the correct file names
+with open(input_file, 'r+') as f:
+    # load params file
+    params = load(f)
+
+modern_dem_name = params['modern_dem_name']
+outlet_id = params['outlet_id']
+modern_dem_metric_file = params['modern_dem_metric_file']
+modern_dem_chi_file = params['modern_dem_chi_file']
+
+#plan for output files
+output_fields =['topographic__elevation']
+with open('simple_usage.txt', 'a') as usage_file:
+    usage = resource.getrusage(resource.RUSAGE_SELF)
+    usage_file.write('\n\nUsage Before Running Model: \n')
+    for name, desc in [
+        ('ru_utime', 'User time'),
+        ('ru_stime', 'System time'),
+        ('ru_maxrss', 'Max. Resident Set Size'),
+        ('ru_ixrss', 'Shared Memory Size'),
+        ('ru_idrss', 'Unshared Memory Size'),
+        ('ru_isrss', 'Stack Size'),
+        ('ru_inblock', 'Block inputs'),
+        ('ru_oublock', 'Block outputs'),
+        ]:
+        usage_file.write('%-25s (%-10s) = %s \n'%(desc, name, getattr(usage, name)))
+
+# first time 
+model = Model(input_file)
+
+step_start = time.time() 
+for i in range(nsteps):
+    model.run_one_step(params['dt'])
+step_end = time.time()
+
+time_per_step = (step_end-step_start)/nsteps
+nsteps_per_duration = int(params['run_duration']/params['dt'])
+
+estimate_of_total_time = time_per_step*nsteps_per_duration/(60.*60.)
+with open('simple_usage.txt', 'a') as usage_file:
+    usage_file.write('time per step: '+str(time_per_step)+' seconds\n')
+    usage_file.write('estimate of total time: '+str(estimate_of_total_time)+' hrs \n')
+    
+    usage = resource.getrusage(resource.RUSAGE_SELF)
+    usage_file.write('\n\nUsage At End of Job: \n')
+    for name, desc in [
+        ('ru_utime', 'User time'),
+        ('ru_stime', 'System time'),
+        ('ru_maxrss', 'Max. Resident Set Size'),
+        ('ru_ixrss', 'Shared Memory Size'),
+        ('ru_idrss', 'Unshared Memory Size'),
+        ('ru_isrss', 'Stack Size'),
+        ('ru_inblock', 'Block inputs'),
+        ('ru_oublock', 'Block outputs'),
+        ]:
+        usage_file.write('%-25s (%-10s) = %s \n'%(desc, name, getattr(usage, name)))
+    
+    end_time = time.time()
+    usage_file.write('\n\n'+time.ctime()+'\n')
+    usage_file.write('Elapsed Time: '+str(end_time-start_time)+'\n')
+
+# test writing out with the model
+model.iteration = 1
+model.write_output(model.params, field_names=output_fields)
+
+imshow_grid(model.grid, model.z, vmin=1220, vmax=1450, cmap='viridis', output='temp.png')
+
+
+model_dem_name = model.params['output_filename'] + \
+    str(model.iteration).zfill(4) + \
+        '.nc'
+
+md = MetricDifference(model_dem_name=model_dem_name,
+                              modern_dem_metric_file = modern_dem_metric_file, 
+                              modern_dem_chi_file = modern_dem_chi_file, 
+                              outlet_id = outlet_id,
+                              output_file_name = model.params['output_filename']+'metric_diff.txt')
+md.run()
+  
+##############################################################################
+##############################################################################
+##############################################################################
+# next profile the code.
+del model
+model = Model(input_file)
+
+import cProfile, pstats
+try:
+    from StringIO import StringIO
+
+except:
+    from io import StringIO    # for handling unicode strings
+    
+pr = cProfile.Profile()
+pr.enable()
+for i in range(nsteps):
+    model.run_one_step(params['dt'])
+pr.disable()
+s = StringIO()
+sortby = 'cumulative'
+ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+ps.print_stats()
+a = s.getvalue()
+with open('profile2.txt', 'w') as f:
+    f.writelines(a)

@@ -1,0 +1,110 @@
+# Dakota input file
+environment
+  top_method_pointer = 'HS'
+  tabular_data
+  tabular_data_file = 'wv_{model_name}_calib.dat'
+
+method
+  id_method = 'HS'
+  hybrid sequential
+  method_pointer_list = 'GA' 'GN' 'GN_final'
+
+method
+id_method = 'GA'
+  coliny_ea
+    seed = {GA_seed}
+    population_size = 23
+  max_function_evaluations = 300
+  final_solutions = 6
+  output verbose
+  model_pointer = 'M1'
+
+method
+  optpp_g_newton
+    id_method = 'GN'
+    convergence_tolerance = 1e-08
+    search_method = gradient_based_line_search
+    max_step = {max_step}
+    gradient_tolerance = 1e-06
+    model_pointer = 'M2'
+
+method
+  optpp_g_newton
+    id_method = 'GN_final'
+    convergence_tolerance = 1e-08
+    search_method = gradient_based_line_search
+    max_step = {max_step}
+    gradient_tolerance = 1e-06
+    model_pointer = 'M3'
+
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R1'
+
+model
+  id_model = 'M2'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R2'
+
+model
+  id_model = 'M3'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R3'
+
+variables
+  id_variables = 'V1'
+  continuous_design = {num_variables}
+    descriptors = {variable_names}
+    initial_point = {initial_point}
+    lower_bounds = {lower_bounds}
+    upper_bounds = {upper_bounds}
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/calibration/sew/HYBRID-CAT/{model_name}/{lowering_history}.{initial_condition}/driver.py /work/WVDP_EWG_STUDY3/study3py/calibration/sew/HYBRID-CAT/{model_name}/{lowering_history}.{initial_condition}'
+  asynchronous
+  evaluation_concurrency = 23
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/calibration/sew/HYBRID-CAT/{model_name}/{lowering_history}.{initial_condition}/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R1'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    no_gradients
+  no_hessians
+
+responses
+  id_responses = 'R2'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    numerical_gradients
+      method_source dakota
+      interval_type forward
+    no_hessians
+
+responses
+  id_responses = 'R3'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    weights = {responses_weights}
+    numerical_gradients
+      method_source dakota
+      interval_type central
+    no_hessians

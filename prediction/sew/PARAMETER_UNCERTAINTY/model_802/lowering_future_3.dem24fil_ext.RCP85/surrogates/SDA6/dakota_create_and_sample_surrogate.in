@@ -1,0 +1,55 @@
+# Dakota input file
+environment
+  tabular_data
+  tabular_data_file = 'model_802.lowering_future_3.dem24fil_ext.RCP85.SDA6.surrogate_samples.dat'
+  method_pointer = 'param_study'
+
+method,
+  id_method = 'param_study'
+  list_parameter_study
+    import_points_file = '/work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/posterior.dat' custom_annotated header
+    model_pointer = 'SURROGATE'
+
+  model,
+      id_model = 'SURROGATE'
+      surrogate global
+        gaussian_process surfpack
+        import_build_points_file = 'complex_samples.dat' custom_annotated header
+        reuse_points all
+        trend reduced_quadratic
+        actual_model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    variables_pointer = 'V1'
+    interface_pointer = 'I1'
+    responses_pointer = 'R1'
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_3.dem24fil_ext.RCP85/driver.py'
+  failure_capture recover 101*1000000.0
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/sew/PARAMETER_UNCERTAINTY/model_802/lowering_future_3.dem24fil_ext.RCP85/run'
+    directory_tag
+    directory_save
+  file_save
+
+variables
+  id_variables = 'V1'
+  continuous_design = 5
+    descriptors = 'linear_diffusivity_exp' 'rock_erosion__threshold_exp' 'till_erosion__threshold_exp' 'K_rock_sp_exp' 'K_till_sp_exp'
+    lower_bounds = -2.0 -3.0 -4.0 -6.0 -4.0
+    upper_bounds = -1.0 1.0 -1.0 -3.0 -3.0
+
+responses
+  id_responses = 'R1'
+  calibration_terms = 101
+    response_descriptors = 'SDA6.0' 'SDA6.1' 'SDA6.2' 'SDA6.3' 'SDA6.4' 'SDA6.5' 'SDA6.6' 'SDA6.7' 'SDA6.8' 'SDA6.9' 'SDA6.10' 'SDA6.11' 'SDA6.12' 'SDA6.13' 'SDA6.14' 'SDA6.15' 'SDA6.16' 'SDA6.17' 'SDA6.18' 'SDA6.19' 'SDA6.20' 'SDA6.21' 'SDA6.22' 'SDA6.23' 'SDA6.24' 'SDA6.25' 'SDA6.26' 'SDA6.27' 'SDA6.28' 'SDA6.29' 'SDA6.30' 'SDA6.31' 'SDA6.32' 'SDA6.33' 'SDA6.34' 'SDA6.35' 'SDA6.36' 'SDA6.37' 'SDA6.38' 'SDA6.39' 'SDA6.40' 'SDA6.41' 'SDA6.42' 'SDA6.43' 'SDA6.44' 'SDA6.45' 'SDA6.46' 'SDA6.47' 'SDA6.48' 'SDA6.49' 'SDA6.50' 'SDA6.51' 'SDA6.52' 'SDA6.53' 'SDA6.54' 'SDA6.55' 'SDA6.56' 'SDA6.57' 'SDA6.58' 'SDA6.59' 'SDA6.60' 'SDA6.61' 'SDA6.62' 'SDA6.63' 'SDA6.64' 'SDA6.65' 'SDA6.66' 'SDA6.67' 'SDA6.68' 'SDA6.69' 'SDA6.70' 'SDA6.71' 'SDA6.72' 'SDA6.73' 'SDA6.74' 'SDA6.75' 'SDA6.76' 'SDA6.77' 'SDA6.78' 'SDA6.79' 'SDA6.80' 'SDA6.81' 'SDA6.82' 'SDA6.83' 'SDA6.84' 'SDA6.85' 'SDA6.86' 'SDA6.87' 'SDA6.88' 'SDA6.89' 'SDA6.90' 'SDA6.91' 'SDA6.92' 'SDA6.93' 'SDA6.94' 'SDA6.95' 'SDA6.96' 'SDA6.97' 'SDA6.98' 'SDA6.99' 'SDA6.100'
+    no_gradients
+    no_hessians

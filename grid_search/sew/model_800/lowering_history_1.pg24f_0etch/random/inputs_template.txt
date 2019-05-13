@@ -1,0 +1,26 @@
+# Inputs for Model: model_800
+# BasicRt
+# use BasicRt
+run_duration: 13000.0
+output_interval: 13000.0
+meters_to_feet: True
+DEM_filename: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/dems/sew/initial_conditions/pg24f_0etch.txt
+outlet_id: 178576
+outlet_lowering_file_path: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/lowering_histories/lowering_history_1.txt
+output_filename: model_800
+chi_mask_dem_name: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/chi_mask/sew/chi_mask.txt
+modern_dem_name: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/dems/sew/modern/dem24fil_ext.txt
+modern_outlet_elevation: 1221.202
+modern_dem_metric_file: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/modern_metric_files/dem24fil_ext.metrics.txt
+modern_dem_chi_file: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/modern_metric_files/dem24fil_ext.metrics.chi.txt
+rock_till_file__name: /work/WVDP_EWG_STUDY3/study3py/auxillary_inputs/rock_till/sew/bdrx_24.txt
+dakota_moat_seed: 4046
+ready: True
+dt: 10
+m_sp: 0.5
+n_sp: 1
+K_rock_sp_exp: -8.0
+K_till_sp_exp: -3.8
+contact_zone__width: 1
+linear_diffusivity_exp: -1.8
+random_seed: {random_seed}

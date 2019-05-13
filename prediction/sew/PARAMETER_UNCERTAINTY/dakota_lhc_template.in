@@ -1,0 +1,50 @@
+# Dakota input file
+environment
+  top_method_pointer = 'LHC'
+  tabular_data
+  tabular_data_file = 'wv_{model_name}_prediction_sampling.dat'
+
+method
+id_method = 'LHC'
+  sampling
+    sample_type lhs
+    samples = 1000
+    seed = {seed}
+  model_pointer = 'M1'
+
+model
+  id_model = 'M1'
+  single
+    interface_pointer = 'I1'
+  variables_pointer = 'V1'
+  responses_pointer = 'R1'
+
+variables
+  id_variables = 'V1'
+  continuous_design = {num_variables}
+    descriptors = {variable_names}
+    lower_bounds = {lower_bounds}
+    upper_bounds = {upper_bounds}
+
+interface
+  id_interface = 'I1'
+  fork
+  analysis_driver = 'python /work/WVDP_EWG_STUDY3/study3py/prediction/{loc}/PARAMETER_UNCERTAINTY/{model_name}/{lowering_history}.{initial_condition}.{climate_future}/driver.py'
+  asynchronous
+  failure_capture recover {recovery_values}
+  evaluation_concurrency = {evaluation_concurrency}
+  parameters_file = 'params.in'
+  results_file = 'results.out'
+  copy_files 'inputs_template.txt'
+  work_directory
+    named '/work/WVDP_EWG_STUDY3/results/prediction/{loc}/PARAMETER_UNCERTAINTY/{model_name}/{lowering_history}.{initial_condition}.{climate_future}/run'
+    directory_tag
+    directory_save
+  file_save
+
+responses
+  id_responses = 'R1'
+  calibration_terms = {num_responses}
+    response_descriptors = {responses_names}
+    no_gradients
+    no_hessians

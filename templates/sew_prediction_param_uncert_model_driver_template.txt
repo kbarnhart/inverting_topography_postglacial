@@ -1,0 +1,209 @@
+# -*- coding: utf-8 -*-
+"""
+Driver model for Landlab Model {ModelID} {ModelName}
+
+Katy Barnhart March 2017
+"""
+import subprocess
+import os
+import sys
+import time
+import resource
+import glob
+import pandas as pd
+
+eval_log = open('evaluation_log.txt', 'w')
+
+current_directory = os.getcwd()
+eval_log.write(current_directory+'\n')
+
+# determine wall time
+output,error = subprocess.Popen(['squeue',
+                                      '--job='+os.environ['SLURM_JOB_ID'], '--format=%.10L'],
+                                     stdout = subprocess.PIPE,
+                                     stderr = subprocess.PIPE).communicate()
+time_left = output.strip().split(' ')[-1]
+try:
+    hours_left = int(time_left.split(':')[-3])
+except IndexError:
+    hours_left = 0
+
+eval_log.write('Wall time has '+str(hours_left)+' hours remaining.\n')
+
+for arg in sys.argv:
+    print(arg)
+
+# handle the possiblity of not finishing in 24 hours, or an instability:
+# first, set the default of running the model to True
+run_model = True
+if  os.path.exists('fail_log.txt'):
+    eval_log.write('A fail_log.txt file exists\n')
+    with open('fail_log.txt', 'r') as fp:
+        lines = fp.readlines()
+    for line in lines:
+        if 'fail' in line:
+            run_model = False
+            fail = True
+            eval_log.write('The fail_log.txt file indicates failure\n')
+else:
+    # if 'outputs_for_analysis.txt' already exists, and no failure log exists,
+    # then copy it to results.out
+    # adding this because I found it in sew 010 run 26
+    if os.path.exists('elevation_at_points_df.csv'):
+        elev_pts_df = pd.read_csv('elevation_at_points_df.csv', header=None, index_col=0)
+
+        if elev_pts_df.shape[0] == 2525:
+            run_model = False
+            fail = False
+            eval_log.write('elevation_at_points_df.csv exists, copying it to results.out\n')
+    else:
+        # if no output exists and sufficient wall time remains,
+        #  write out "fail"
+        # this means that if things fail in the future,
+        if hours_left >= 23:
+            eval_log.write('Sufficient time exists, writing a new fail_log.txt file to be removed in case of sucess\n')
+            with open('fail_log.txt', 'w') as fp:
+                fp.write('fail')
+
+            # write to results.out this will be overwritten in case of sucess.
+            with open(sys.argv[2], 'w') as fp:
+                fp.write('fail\n')
+
+eval_log.close()
+
+print(run_model)
+
+if run_model:
+    from metric_calculator import NCExtractor
+    from erosion_model import {ModelUsed} as Model
+    from landlab import imshow_grid
+    from subprocess import call
+
+    # set files and directories used to set input templates.
+    # Files and directories.
+    input_file = 'inputs.txt'
+    input_template = 'inputs_template.txt'
+
+    # Use `dprepro` (from $DAKOTA_DIR/bin) to substitute parameter
+    # values from Dakota into the SWASH input template, creating a new
+    # inputs.txt file.
+
+    # dakota will have already copied the input template into the folder
+    call(['dprepro', sys.argv[1], input_template, input_file])
+    call(['rm', input_template])
+
+    start_time = time.time()
+    with open('usage.txt', 'a') as usage_file:
+        usage_file.write(time.ctime()+'\n')
+
+    # write usage
+    with open('usage.txt', 'a') as usage_file:
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        usage_file.write('\n\nUsage Before Running Model: \n')
+        for name, desc in [
+            ('ru_utime', 'User time'),
+            ('ru_stime', 'System time'),
+            ('ru_maxrss', 'Max. Resident Set Size'),
+            ('ru_ixrss', 'Shared Memory Size'),
+            ('ru_idrss', 'Unshared Memory Size'),
+            ('ru_isrss', 'Stack Size'),
+            ('ru_inblock', 'Block inputs'),
+            ('ru_oublock', 'Block outputs'),
+            ]:
+            usage_file.write('%-25s (%-10s) = %s \n'%(desc, name, getattr(usage, name)))
+
+    #plan for output files
+    output_fields =['topographic__elevation']
+
+    #run the model
+    model = Model(input_file)
+    model.run(output_fields=output_fields)
+
+    with open('usage.txt', 'a') as usage_file:
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        usage_file.write('\n\nUsage After Running Model: \n')
+        for name, desc in [
+            ('ru_utime', 'User time'),
+            ('ru_stime', 'System time'),
+            ('ru_maxrss', 'Max. Resident Set Size'),
+            ('ru_ixrss', 'Shared Memory Size'),
+            ('ru_idrss', 'Unshared Memory Size'),
+            ('ru_isrss', 'Stack Size'),
+            ('ru_inblock', 'Block inputs'),
+            ('ru_oublock', 'Block outputs'),
+            ]:
+            usage_file.write('%-25s (%-10s) = %s \n'%(desc, name, getattr(usage, name)))
+
+    model_dem_name = model.params['output_filename'] + \
+        str(model.iteration-1).zfill(4) + \
+            '.nc'
+
+    # for the csv points, pull out each
+    points_list = model.params['points_file']
+
+    output_file_names = {}
+    for it in range(model.iteration):
+        output_file_names[it] = model.params['output_filename'] + \
+                                        str(it).zfill(4) + \
+                                        '.nc'
+
+    nce = NCExtractor(output_file_names, points_list)
+    nce.extract_values()
+
+    # write out metrics as "elevation_at_points_df.csv' and as Dakota expects
+    nce.reordered_df.to_csv('elevation_at_points_df.csv')
+
+    # if a fail log was written (23 hours was on clock at start of
+    # attempt) then remove it.
+    if os.path.exists('fail_log.txt'):
+        call(['rm', 'fail_log.txt'])
+
+    # write out residual. This will replace the fail used before.
+    with open(sys.argv[2], 'w') as fp:
+        for metric in nce.extracted_values:
+            fp.write(str(metric)+'\n')
+
+    cur_working = os.getcwd()
+    cur_working_split = cur_working.split(os.path.sep)
+    cur_working_split.append('png')
+    try:
+        cut_ind = cur_working_split.index('results')+3
+    except:
+        cut_ind = cur_working_split.index('study3py')+3
+
+    fig_name = '.'.join(cur_working_split[cut_ind:])
+
+    imshow_grid(model.grid, model.z, vmin=990, vmax=1940, cmap='viridis', output=fig_name)
+
+    imshow_grid(model.grid, 'cumulative_erosion__depth', vmin=-250, vmax=250, cmap='RdBu', output=fig_name[:-4]+'.elev_change.png')
+
+    with open('usage.txt', 'a') as usage_file:
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        usage_file.write('\n\nUsage At End of Job: \n')
+        for name, desc in [
+            ('ru_utime', 'User time'),
+            ('ru_stime', 'System time'),
+            ('ru_maxrss', 'Max. Resident Set Size'),
+            ('ru_ixrss', 'Shared Memory Size'),
+            ('ru_idrss', 'Unshared Memory Size'),
+            ('ru_isrss', 'Stack Size'),
+            ('ru_inblock', 'Block inputs'),
+            ('ru_oublock', 'Block outputs'),
+            ]:
+            usage_file.write('%-25s (%-10s) = %s \n'%(desc, name, getattr(usage, name)))
+
+        end_time = time.time()
+        usage_file.write('\n\n'+time.ctime()+'\n')
+        usage_file.write('Elapsed Time: '+str(end_time-start_time)+'\n')
+
+else:
+    if fail:
+        # model isn't run b/c of failure of past attempt
+        with open(sys.argv[2], 'w') as fp:
+            fp.write('fail\n')
+    else:
+        # if outputs for analysis already existed and had 2525 lines.
+        values = elev_pts_df.values.flatten()
+        with open(sys.argv[2], 'w') as fp:
+            for value in values:
+                fp.write(str(value)+'\n')
