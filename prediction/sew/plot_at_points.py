@@ -92,7 +92,6 @@ for mod in ["only842", "all800s"]:
             vals["exp2_mean"] = ds.topo_exp2_mean.values[:, row, col]*ft2m    
             
             vals["param_cor"] = ds.topo_exp2_model_param_correlated_std.values[:, row, col]*ft2m
-            vals["param_remain"] = ds.topo_exp2_remaining_std.values[:, row, col]*ft2m
             vals["param_global_std"] = ds.topo_exp2_std.values[:, row, col]*ft2m
             
             

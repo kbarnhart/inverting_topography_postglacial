@@ -244,56 +244,66 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
             & (initial_condition.model_time == t)
         ]
         pa_sel = parameter[
-            parameter.model_name.isin(used_models) & (parameter.model_time == t)
+            parameter.model_name.isin(used_models)
+            & (parameter.model_time == t)
         ]
 
         # total:
-        ds = xr.open_mfdataset(
+        with xr.open_mfdataset(
             ic_sel.file_name,
             concat_dim="nr",
             engine="netcdf4",
+            autoclose=False,
             data_vars=["topographic__elevation"],
             drop_variables=ignore_vars,
-        )
-        # global mean
-        global_mean = ds.topographic__elevation.mean(dim="nr").squeeze()
-        out_dataset = xr.Dataset({"expected_topographic__elevation": global_mean})
+        ) as ds:
+            # global mean
+            global_mean = ds.topographic__elevation.mean(dim="nr").squeeze().compute()
+            out_dataset = xr.Dataset({"expected_topographic__elevation": global_mean})
 
-        # expected cumulative erosion.
-        expected_cumulative_erosion = out_dataset.expected_topographic__elevation - zzm
-        out_dataset.__setitem__(
-            "expected_cumulative_erosion__depth",
-            (expected_cumulative_erosion.dims, expected_cumulative_erosion.values),
-        )
+            # expected cumulative erosion.
+            expected_cumulative_erosion = (
+                out_dataset.expected_topographic__elevation - zzm
+            )
+            out_dataset.__setitem__(
+                "expected_cumulative_erosion__depth",
+                (expected_cumulative_erosion.dims, expected_cumulative_erosion.values),
+            )
 
-        # total standard deviation.
-        topo_total_exp1_std = ds.topographic__elevation.std(dim="nr").squeeze()
-        out_dataset.__setitem__(
-            "topo_total_exp1_std",
-            (topo_total_exp1_std.dims, topo_total_exp1_std.values),
-        )
+            # total standard deviation.
+            topo_total_exp1_std = (
+                ds.topographic__elevation.std(dim="nr").squeeze().compute()
+            )
+            out_dataset.__setitem__(
+                "topo_total_exp1_std",
+                (topo_total_exp1_std.dims, topo_total_exp1_std.values),
+            )
 
         # across parameters. At present there is only one model/climate/lowering combination.
         # todo this is only correct because there is only one model/lowering combination.
         if set_key == "all800s":
-
-            ds = xr.open_mfdataset(
+            with xr.open_mfdataset(
                 pa_sel.file_name,
                 concat_dim="nr",
                 engine="netcdf4",
+                autoclose=False,
                 data_vars=["topographic__elevation"],
                 drop_variables=ignore_vars,
-            )
+            ) as ds:
 
-            global_mean_param = ds.topographic__elevation.mean(dim="nr").squeeze()
-            out_dataset.__setitem__(
-                "topo_exp2_mean", (global_mean_param.dims, global_mean_param.values)
-            )
+                global_mean_param = (
+                    ds.topographic__elevation.mean(dim="nr").squeeze().compute()
+                )
+                out_dataset.__setitem__(
+                    "topo_exp2_mean", (global_mean_param.dims, global_mean_param.values)
+                )
 
-            global_std_param = ds.topographic__elevation.std(dim="nr").squeeze()
-            out_dataset.__setitem__(
-                "topo_exp2_std", (global_std_param.dims, global_std_param.values)
-            )
+                global_std_param = (
+                    ds.topographic__elevation.std(dim="nr").squeeze().compute()
+                )
+                out_dataset.__setitem__(
+                    "topo_exp2_std", (global_std_param.dims, global_std_param.values)
+                )
 
             models = pa_sel.model_name.unique()
             param_model_list = []
@@ -302,30 +312,31 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
 
             for model in models:
                 pa_sel_model = pa_sel[pa_sel.model_name == model]
-                ds = xr.open_mfdataset(
+                with xr.open_mfdataset(
                     pa_sel_model.file_name,
                     concat_dim="nr",
                     engine="netcdf4",
+                    autoclose=False,
                     data_vars=["topographic__elevation"],
                     drop_variables=ignore_vars,
-                )
-                within_model_var = ds.var(dim="nr").squeeze()
-                within_model_mean = ds.mean(dim="nr").squeeze()
+                ) as ds:
+                    within_model_var = ds.var(dim="nr").squeeze().compute()
+                    within_model_mean = ds.mean(dim="nr").squeeze().compute()
 
-                about_global_variance = (within_model_mean - global_mean_param) ** 2
+                    about_global_variance = (within_model_mean - global_mean_param) ** 2
 
-                param_var_list.append(within_model_var)
-                param_model_list.append(about_global_variance)
+                    param_var_list.append(within_model_var)
+                    param_model_list.append(about_global_variance)
 
-                param_correlated_var_list.append(
-                    (within_model_var + about_global_variance) ** 0.5
-                )
-                # ds.close()
+                    param_correlated_var_list.append(
+                        (within_model_var + about_global_variance) ** 0.5
+                    )
 
             topo_exp2_model_std = (
                 xr.concat(param_model_list, dim="nm")
                 .topographic__elevation.mean(dim="nm")
                 .squeeze()
+                .compute()
                 ** 0.5
             )
 
@@ -333,6 +344,7 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
                 xr.concat(param_var_list, dim="nm")
                 .topographic__elevation.mean(dim="nm")
                 .squeeze()
+                .compute()
                 ** 0.5
             )
 
@@ -340,6 +352,7 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
                 xr.concat(param_correlated_var_list, dim="nm")
                 .topographic__elevation.mean(dim="nm")
                 .squeeze()
+                .compute()
             )
 
             out_dataset.__setitem__(
@@ -365,17 +378,19 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
 
         else:
             # if there is only one model.
-            ds = xr.open_mfdataset(
+            with xr.open_mfdataset(
                 pa_sel.file_name,
                 concat_dim="nr",
                 engine="netcdf4",
+                autoclose=False,
                 data_vars=["topographic__elevation"],
                 drop_variables=ignore_vars,
-            )
-            topo_exp2_param_independent_std = ds.topographic__elevation.std(
-                dim="nr"
-            ).squeeze()
-            # ds.close()
+            ) as ds:
+
+                topo_exp2_param_independent_std = (
+                    ds.topographic__elevation.std(dim="nr").squeeze().compute()
+                )
+
         out_dataset.__setitem__(
             "topo_exp2_param_independent_std",
             (
@@ -383,8 +398,6 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
                 topo_exp2_param_independent_std.values,
             ),
         )
-
-        # ds.close()
 
         # a) across model uncertainty is the variability of the model means about
         # the global mean.
@@ -394,21 +407,22 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
             model_means = {}
             for model in models:
                 ic_sel_model = ic_sel[ic_sel.model_name == model]
-                ds = xr.open_mfdataset(
+                with xr.open_mfdataset(
                     ic_sel_model.file_name,
                     concat_dim="nr",
                     engine="netcdf4",
+                    autoclose=False,
                     data_vars=["topographic__elevation"],
                     drop_variables=ignore_vars,
-                )
-                model_mean = ds.mean(dim="nr").squeeze()
-                model_means[model] = model_mean
-                model_list.append((model_mean - global_mean) ** 2)
-                # ds.close()
+                ) as ds:
+                    model_mean = ds.mean(dim="nr").squeeze().compute()
+                    model_means[model] = model_mean
+                    model_list.append((model_mean - global_mean) ** 2)
             topo_model_std = (
                 xr.concat(model_list, dim="nm")
                 .topographic__elevation.mean(dim="nm")
                 .squeeze()
+                .compute()
                 ** 0.5
             )
             out_dataset.__setitem__(
@@ -421,21 +435,22 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
         lowering_means = {}
         for lowering in lowerings:
             ic_sel_low = ic_sel[ic_sel.lowering_future == lowering]
-            ds = xr.open_mfdataset(
+            with xr.open_mfdataset(
                 ic_sel_low.file_name,
                 concat_dim="nr",
                 engine="netcdf4",
+                autoclose=False,
                 data_vars=["topographic__elevation"],
                 drop_variables=ignore_vars,
-            )
-            lowering_mean = ds.mean(dim="nr").squeeze()
-            lowering_means[lowering] = lowering_mean
-            lowering_list.append((lowering_mean - global_mean) ** 2)
-            # ds.close()
+            ) as ds:
+                lowering_mean = ds.mean(dim="nr").squeeze().compute()
+                lowering_means[lowering] = lowering_mean
+                lowering_list.append((lowering_mean - global_mean) ** 2)
         topo_lower_std = (
             xr.concat(lowering_list, dim="nl")
             .topographic__elevation.mean(dim="nl")
             .squeeze()
+            .compute()
             ** 0.5
         )
         out_dataset.__setitem__(
@@ -448,21 +463,23 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
         climate_means = {}
         for climate in climates:
             ic_sel_cli = ic_sel[ic_sel.climate_future == climate]
-            ds = xr.open_mfdataset(
+            with xr.open_mfdataset(
                 ic_sel_cli.file_name,
                 concat_dim="nr",
                 engine="netcdf4",
+                autoclose=False,
                 data_vars=["topographic__elevation"],
                 drop_variables=ignore_vars,
-            )
-            climate_mean = ds.mean(dim="nr").squeeze()
-            climate_means[climate] = climate_mean
-            climate_list.append((climate_mean - global_mean) ** 2)
-            # ds.close()
+            ) as ds:
+                climate_mean = ds.mean(dim="nr").squeeze().compute()
+                climate_means[climate] = climate_mean
+                climate_list.append((climate_mean - global_mean) ** 2)
+
         topo_cli_std = (
             xr.concat(climate_list, dim="nc")
             .topographic__elevation.mean(dim="nc")
             .squeeze()
+            .compute()
             ** 0.5
         )
         out_dataset.__setitem__(
@@ -478,31 +495,31 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
         for climate_lowering in climate_lowerings:
             climate, lowering = climate_lowering.split(".")
             ic_sel_cli_low = ic_sel[ic_sel.climate_lowering == climate_lowering]
-            ds = xr.open_mfdataset(
+            with xr.open_mfdataset(
                 ic_sel_cli_low.file_name,
                 concat_dim="nr",
                 engine="netcdf4",
+                autoclose=False,
                 data_vars=["topographic__elevation"],
                 drop_variables=ignore_vars,
-            )
-            climate_lowering_mean = ds.mean(dim="nr").squeeze()
-
-            climate_lowering_means[climate_lowering] = climate_lowering_mean
-
-            climate_lowering_list.append(
-                (
-                    climate_lowering_mean
-                    + global_mean
-                    - climate_means[climate]
-                    - lowering_means[lowering]
+            ) as ds:
+                climate_lowering_mean = ds.mean(dim="nr").squeeze().compute()
+                climate_lowering_means[climate_lowering] = climate_lowering_mean
+                climate_lowering_list.append(
+                    (
+                        climate_lowering_mean
+                        + global_mean
+                        - climate_means[climate]
+                        - lowering_means[lowering]
+                    )
+                    ** 2
                 )
-                ** 2
-            )
-            # ds.close()
+
         topo_climate_lowering_interaction_std = (
             xr.concat(climate_lowering_list, dim="nc")
             .topographic__elevation.mean(dim="nc")
             .squeeze()
+            .compute()
             ** 0.5
         )
         out_dataset.__setitem__(
@@ -522,29 +539,30 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
             for model_climate in model_climates:
                 model, climate = model_climate.split(".")
                 ic_sel_mod_cli = ic_sel[ic_sel.model_climate == model_climate]
-                ds = xr.open_mfdataset(
+                with xr.open_mfdataset(
                     ic_sel_mod_cli.file_name,
                     concat_dim="nr",
                     engine="netcdf4",
+                    autoclose=False,
                     data_vars=["topographic__elevation"],
                     drop_variables=ignore_vars,
-                )
-                model_climate_mean = ds.mean(dim="nr").squeeze()
-                model_climate_means[model_climate] = model_climate_mean
-                model_climate_list.append(
-                    (
-                        model_climate_mean
-                        + global_mean
-                        - climate_means[climate]
-                        - model_means[model]
+                ) as ds:
+                    model_climate_mean = ds.mean(dim="nr").squeeze().compute()
+                    model_climate_means[model_climate] = model_climate_mean
+                    model_climate_list.append(
+                        (
+                            model_climate_mean
+                            + global_mean
+                            - climate_means[climate]
+                            - model_means[model]
+                        )
+                        ** 2
                     )
-                    ** 2
-                )
-                # ds.close()
             topo_model_climate_interaction_std = (
                 xr.concat(model_climate_list, dim="nc")
                 .topographic__elevation.mean(dim="nc")
                 .squeeze()
+                .compute()
                 ** 0.5
             )
             out_dataset.__setitem__(
@@ -562,30 +580,30 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
             for model_lowering in model_lowerings:
                 model, lowering = model_lowering.split(".")
                 ic_sel_mod_lower = ic_sel[ic_sel.model_lowering == model_lowering]
-                ds = xr.open_mfdataset(
+                with xr.open_mfdataset(
                     ic_sel_mod_lower.file_name,
                     concat_dim="nr",
                     engine="netcdf4",
+                    autoclose=False,
                     data_vars=["topographic__elevation"],
                     drop_variables=ignore_vars,
-                )
-                model_lowering_mean = ds.mean(dim="nr").squeeze()
-                model_lowering_means[model_lowering] = model_lowering_mean
-
-                model_lowering_list.append(
-                    (
-                        model_lowering_mean
-                        + global_mean
-                        - lowering_means[lowering]
-                        - model_means[model]
+                ) as ds:
+                    model_lowering_mean = ds.mean(dim="nr").squeeze().compute()
+                    model_lowering_means[model_lowering] = model_lowering_mean
+                    model_lowering_list.append(
+                        (
+                            model_lowering_mean
+                            + global_mean
+                            - lowering_means[lowering]
+                            - model_means[model]
+                        )
+                        ** 2
                     )
-                    ** 2
-                )
-                # ds.close()
             topo_model_lowering_interaction_std = (
                 xr.concat(model_lowering_list, dim="nc")
                 .topographic__elevation.mean(dim="nc")
                 .squeeze()
+                .compute()
                 ** 0.5
             )
             out_dataset.__setitem__(
@@ -607,32 +625,33 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
                 ic_sel_mod_clim_lower = ic_sel[
                     ic_sel.model_climate_lowering == model_climate_lowering
                 ]
-                ds = xr.open_mfdataset(
+                with xr.open_mfdataset(
                     ic_sel_mod_clim_lower.file_name,
                     concat_dim="nr",
                     engine="netcdf4",
+                    autoclose=False,
                     data_vars=["topographic__elevation"],
                     drop_variables=ignore_vars,
-                )
-                model_climate_lowering_mean = ds.mean(dim="nr").squeeze()
-                model_climate_lowering_list.append(
-                    (
-                        model_climate_lowering_mean
-                        - global_mean
-                        + lowering_means[lowering]
-                        + model_means[model]
-                        + climate_means[climate]
-                        - climate_lowering_means[climate_lowering]
-                        - model_climate_means[model_climate]
-                        - model_lowering_means[model_lowering]
+                ) as ds:
+                    model_climate_lowering_mean = ds.mean(dim="nr").squeeze().compute()
+                    model_climate_lowering_list.append(
+                        (
+                            model_climate_lowering_mean
+                            - global_mean
+                            + lowering_means[lowering]
+                            + model_means[model]
+                            + climate_means[climate]
+                            - climate_lowering_means[climate_lowering]
+                            - model_climate_means[model_climate]
+                            - model_lowering_means[model_lowering]
+                        )
+                        ** 2
                     )
-                    ** 2
-                )
-                # ds.close()
             topo_model_climate_lowering_interaction_std = (
                 xr.concat(model_climate_lowering_list, dim="nc")
                 .topographic__elevation.mean(dim="nc")
                 .squeeze()
+                .compute()
                 ** 0.5
             )
             out_dataset.__setitem__(
@@ -665,19 +684,21 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
         ic_list = []
         for mcl in mcls:
             ic_sel_mcl = ic_sel[ic_sel.model_climate_lowering == mcl]
-            ds = xr.open_mfdataset(
+            with xr.open_mfdataset(
                 ic_sel_mcl.file_name,
                 concat_dim="nr",
                 engine="netcdf4",
+                autoclose=False,
                 data_vars=["topographic__elevation"],
                 drop_variables=ignore_vars,
-            )
-            ic_list.append(ds.var(dim="nr").squeeze())
+            ) as ds:
+                ic_list.append(ds.var(dim="nr").squeeze().compute())
 
         topo_ic_std = (
             xr.concat(ic_list, dim="nic")
             .topographic__elevation.mean(dim="nic")
             .squeeze()
+            .compute()
             ** 0.5
         )
         out_dataset.__setitem__("topo_ic_std", (topo_ic_std.dims, topo_ic_std.values))
@@ -700,7 +721,9 @@ def average_results(set_key, t, initial_condition, ignore_vars, used_models, zzm
             (topo_total_star_std.dims, topo_total_star_std.values),
         )
         # save out.
-        out_dataset.to_netcdf(out_name, engine="netcdf4", format="NETCDF4")
+        out_dataset.to_netcdf(
+            out_name, engine="netcdf4", format="NETCDF4"
+        )
 
 
 output = Parallel(n_jobs=1)(
