@@ -29,10 +29,10 @@ v_sc_exp,Normalized Settling Velocity after subtracting upward turbulent velocit
 F_f,Fraction of fines,unitless,0.00E+00,1.00E+00,,,$F_f$
 phi,Porosity of sediment,unitless,0.00E+00,1.00E+00,,,$\phi$
 H_star,Characteristic decay depth for scour,meters,5.00E-02,1.00E+00,,,$H_*$
-linear_diffusivity_exp,Hillslope Diffusivity Exponent,n/a,-6.30E+00,-1.30E+00,,,$D$
+linear_diffusivity_exp,Hillslope Diffusivity Exponent,n/a,-6.30E+00,-1.30E+00,,,$\log_{10} D$
 soil_transport_decay_depth,Soil Transport Decay Depth,meters,1.00E-01,1.00E+00,,,$H_0$
 initial_soil_thickness,Initial Soil Thickness,meters,3.05E-01,1.52E+00,,,$H_{init}$
-max_soil_production_rate,Maximum Soil Production Rate,meters/year,1.00E-06,1.00E-03,,,$P_0$ 
+max_soil_production_rate,Maximum Soil Production Rate,meters/year,1.00E-06,1.00E-03,,,$P_0$
 soil_production_decay_depth,Soil Production Decay Depth,meters,2.00E-01,7.00E-01,5.00E-01,,$H_s$
 slope_crit,Critical Slope,unitless,1.00E-01,1.25E+00,,,$S_c$
 K_hydraulic_conductivity,Hydraulic Conductivity,m/yr,3.00E-02,3.00E+02,,,$K_{sat}$
