@@ -519,7 +519,7 @@ class _ErosionModel(object):
                     # exit program
                     sys.exit()
 
-        except KeyError:
+        except:
             pass
 
 
