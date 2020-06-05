@@ -35,9 +35,9 @@ colors = {"lower": "#e6ab02",
 
 order = [ "interactions", "lower", "climate", "ic", "param", "model"]
 
-for mod in ["only842", "all800s"]:
+for mod in ["all800s", "only842"]:
     
-    files = np.sort(glob.glob("synthesis_netcdfs_with_param_test/{key}*.nc".format(key=mod)))
+    files = np.sort(glob.glob("synthesis_netcdfs_with_param/{key}*.nc".format(key=mod)))
     
     time = np.asarray([int(file.split('.')[-2].split('_')[-1]) for file in files])/1000
 

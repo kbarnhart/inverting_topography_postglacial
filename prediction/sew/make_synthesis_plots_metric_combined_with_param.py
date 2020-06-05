@@ -79,11 +79,11 @@ for shape in shapes:
     outline_segments.append(segment)
 
 mg = RasterModelGrid((415, 438), xy_spacing=24)
-
+ft2m = 0.3048
 set_keys = ["only842", "all800s"]
 fs = (3, 2.4)
 
-std_lim = 33
+std_lim = 33 * ft2m
 ero_lim = 100
 ero_col = "RdBu"
 std_colorbar = "viridis_r"
@@ -94,7 +94,7 @@ plot_text = {"only842": "Only BasicChRtTh", "all800s": "Eight Rt variants"}
 text_x = 0.03 * (mg.x_of_node.max() - mg.x_of_node.min())
 text_y = 1 * (mg.y_of_node.max() - mg.y_of_node.min())
 
-ft2m = 0.3048
+
 
 xtext = 300
 ytext = 0
@@ -102,7 +102,7 @@ ytext = 0
 w = 1000
 h=30 
 dx = 24
-times = [time for time in np.arange(0, 10100, 1000) if time!=4000]
+times = np.arange(0, 10100, 1000)
 
 
 #full size = 190 mm x 230
@@ -246,11 +246,11 @@ for time in times:
 
             imshow_grid(
                 mg,
-                ds.std_topo_model.values.flatten() * ft2m,
+                ds.topo_model_std.values.flatten() * ft2m,
                 color_for_closed=None,
                 allow_colorbar=False,
                 vmin=0,
-                vmax=std_lim * ft2m,
+                vmax=std_lim ,
                 cmap=std_colorbar,
             )
             plt.axis("off")
@@ -294,7 +294,7 @@ for time in times:
 
             ax = fig.add_subplot(inner_grid[3,1])
             sm = plt.cm.ScalarMappable(
-                cmap=std_colorbar, norm=plt.Normalize(vmin=0, vmax=std_lim * ft2m)
+                cmap=std_colorbar, norm=plt.Normalize(vmin=0, vmax=std_lim )
             )
             cbar = fig.colorbar(sm, cax=ax, orientation="horizontal",extend="max")
             cbar.ax.set_title("Standard Deviation [m]", size=5, pad=-0.5)
@@ -306,11 +306,11 @@ for time in times:
         
         imshow_grid(
             mg,
-            ds.std_topo_param.values.flatten() * ft2m,
+            ds.topo_exp2_param_independent_std.values.flatten() * ft2m,
             color_for_closed=None,
             allow_colorbar=False,
             vmin=0,
-            vmax=std_lim * ft2m,
+            vmax=std_lim ,
             cmap=std_colorbar,
         )
         plt.axis("off")
@@ -344,16 +344,16 @@ for time in times:
         
         imshow_grid(
             mg,
-            ds.std_topo_lower.values.flatten() * ft2m,
+            ds.topo_lower_std.values.flatten() * ft2m,
             color_for_closed=None,
             allow_colorbar=False,
             vmin=0,
-            vmax=std_lim * ft2m,
+            vmax=std_lim ,
             cmap=std_colorbar,
         )
         plt.axis("off")
         plt.annotate(r"\textbf{"+letters.pop(0)+"}.", xy=(0.05, 0.55), xycoords='axes fraction')
-        plot_name = "Downcutting"
+        plot_name = "Outlet Incision"
         line_segments = LineCollection(segments, colors="k", linewidth=0.1)
         # ax.add_collection(line_segments)
         outline_line_segments = LineCollection(
@@ -381,11 +381,11 @@ for time in times:
         ax.patch.set_alpha(0. )
         imshow_grid(
             mg,
-            ds.std_topo_clim.values.flatten() * ft2m,
+            ds.topo_cli_std.values.flatten() * ft2m,
             color_for_closed=None,
             allow_colorbar=False,
             vmin=0,
-            vmax=std_lim * ft2m,
+            vmax=std_lim ,
             cmap=std_colorbar,
         )
         plt.axis("off")
@@ -418,11 +418,11 @@ for time in times:
         ax.patch.set_alpha(0. )
         imshow_grid(
             mg,
-            ds.std_topo_ic.values.flatten() * ft2m,
+            ds.topo_ic_std.values.flatten() * ft2m,
             color_for_closed=None,
             allow_colorbar=False,
             vmin=0,
-            vmax=std_lim * ft2m,
+            vmax=std_lim ,
             cmap=std_colorbar,
         )
         plt.axis("off")
@@ -454,7 +454,7 @@ for time in times:
         ax.patch.set_alpha(0. )
         imshow_grid(
             mg,
-            ds.std_interactions_topo.values.flatten() * ft2m,
+            ds.topo_interactions_std.values.flatten() * ft2m,
             color_for_closed=None,
             allow_colorbar=False,
             vmin=0,
@@ -492,7 +492,7 @@ for time in times:
         ax.patch.set_alpha(0. )
         imshow_grid(
             mg,
-            ds.std_total_star_topo.values.flatten() * ft2m,
+            ds.topo_total_star_std.values.flatten() * ft2m,
             color_for_closed=None,
             allow_colorbar=False,
             vmin=0,
